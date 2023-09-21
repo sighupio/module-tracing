@@ -1,0 +1,341 @@
+global:
+  image:
+    # -- Overrides the Docker registry globally for all images, excluding enterprise.
+    registry: docker.io
+    # -- Optional list of imagePullSecrets for all images, excluding enterprise.
+    # Names of existing secrets with private container registry credentials.
+    # Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    # Example:
+    # pullSecrets: [ my-dockerconfigjson-secret ]
+    pullSecrets: []
+  # -- Overrides the priorityClassName for all pods
+  priorityClassName: null
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: 'cluster.local'
+  # -- configures DNS service name
+  dnsService: 'kube-dns'
+  # -- configures DNS service namespace
+  dnsNamespace: 'kube-system'
+fullnameOverride: ''
+# fullnameOverride: tempo
+
+
+# -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
+reportingEnabled: true
+
+tempo:
+  image:
+    # -- The Docker registry
+    registry: docker.io
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository
+    repository: grafana/tempo
+    # -- Overrides the image tag whose default is the chart's appVersion
+    tag: null
+    pullPolicy: IfNotPresent
+  
+# Configuration for the ingester
+ingester:
+  # -- Number of replicas for the ingester
+  replicas: 3
+  # -- hostAliases to add
+  autoscaling:
+    # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the ingester
+    behavior: {}
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
+  image:
+    # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for ingester pods
+
+# Configuration for the metrics-generator
+metricsGenerator:
+  # -- Specifies whether a metrics-generator should be deployed
+  enabled: false
+  
+# Configuration for the distributor
+distributor:
+  # -- Number of replicas for the distributor
+  replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  autoscaling:
+    # -- Enable autoscaling for the distributor
+    enabled: true
+    # -- Minimum autoscaling replicas for the distributor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the distributor
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the distributor
+    behavior: {}
+    # -- Target CPU utilisation percentage for the distributor
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the distributor
+    targetMemoryUtilizationPercentage:
+  image:
+    # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
+    tag: null
+
+# Configuration for the compactor
+compactor:
+  # -- Number of replicas for the compactor
+  replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  image:
+    # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the compactor image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the compactor image. Overrides `tempo.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for compactor pods
+
+# Configuration for the querier
+querier:
+  # -- Number of replicas for the querier
+  replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  autoscaling:
+    # -- Enable autoscaling for the querier
+    enabled: true
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the querier
+    behavior: {}
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
+  image:
+    # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the querier image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the querier image. Overrides `tempo.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for querier pods
+
+# Configuration for the query-frontend
+queryFrontend:
+  query:
+    # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
+    enabled: false
+  
+# Configuration for the federation-frontend
+# Can only be enabled if enterprise.enabled is true - requires license.
+enterpriseFederationFrontend:
+  # -- Specifies whether a federation-frontend should be deployed
+  enabled: false
+
+traces:
+  jaeger:
+    grpc:
+      # -- Enable Tempo to ingest Jaeger GRPC traces
+      enabled: true
+      # -- Jaeger GRPC receiver config
+      receiverConfig: {}
+    thriftBinary:
+      # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+      enabled: true
+      # -- Jaeger Thrift Binary receiver config
+      receiverConfig: {}
+    thriftCompact:
+      # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+      enabled: true
+      # -- Jaeger Thrift Compact receiver config
+      receiverConfig: {}
+    thriftHttp:
+      # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      enabled: true
+      # -- Jaeger Thrift HTTP receiver config
+      receiverConfig: {}
+  zipkin:
+    # -- Enable Tempo to ingest Zipkin traces
+    enabled: true
+    # -- Zipkin receiver config
+    receiverConfig: {}
+  otlp:
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: true
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: true
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+  opencensus:
+    # -- Enable Tempo to ingest Open Census traces
+    enabled: true
+    # -- Open Census receiver config
+    receiverConfig: {}
+  # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
+  kafka: {}
+
+# To configure a different storage backend instead of local storage:
+# storage:
+#   trace:
+#     backend: azure
+#     azure:
+#       container_name:
+#       storage_account_name:
+#       storage_account_key:
+storage:
+  trace:
+    # Settings for the block storage backend and buckets.
+    block:
+      # -- The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/
+      version: null
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
+    backend: s3
+    s3:
+      access_key: 'minio'
+      secret_key: 'minio123'
+      bucket: 'tempo'
+      endpoint: 'minio-observability:9000'
+      insecure: true
+
+# memcached is for all of the Tempo pieces to coordinate with each other.
+# you can use your self memcacherd by set enable: false and host + service
+memcached:
+  # -- Specified whether the memcached cachce should be enabled
+  enabled: true
+  image:
+    # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
+    # -- Memcached Docker image repository
+    repository: memcached
+    # -- Memcached Docker image tag
+    tag: 1.5.17-alpine
+    # -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
+  host: memcached
+  # Number of replicas for memchached
+  replicas: 1
+  # -- Additional CLI args for memcached
+ 
+
+memcachedExporter:
+  # -- Specifies whether the Memcached Exporter should be enabled
+  enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  image:
+    # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
+    # -- Memcached Exporter Docker image repository
+    repository: prom/memcached-exporter
+    # -- Memcached Exporter Docker image tag
+    tag: v0.8.0
+    # -- Memcached Exporter Docker image pull policy
+    pullPolicy: IfNotPresent
+    # -- Memcached Exporter resource requests and limits
+  resources: {}
+
+metaMonitoring:
+  # ServiceMonitor configuration
+  serviceMonitor:
+    # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+    enabled: true
+    # -- Alternative namespace for ServiceMonitor resources
+
+  # metaMonitoringAgent configures the built in Grafana Agent that can scrape metrics and logs and send them to a local or remote destination
+  grafanaAgent:
+    # -- Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the
+    # ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below.
+    # Note that you need to configure serviceMonitor in order to have some metrics available.
+    enabled: false
+
+# Rules for the Prometheus Operator
+prometheusRule:
+  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  enabled: true
+  # -- Alternative namespace for the PrometheusRule resource
+
+minio:
+  enabled: false
+
+# Configuration for the gateway
+gateway:
+  # -- Specifies whether the gateway should be enabled
+  enabled: true
+  # -- Number of replicas for the gateway
+  replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: true
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the gateway
+    behavior: {}
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
+  image:
+    # -- The Docker registry for the gateway image. Overrides `global.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
+    # -- The gateway image repository
+    repository: nginxinc/nginx-unprivileged
+    # -- The gateway image tag
+    tag: 1.19-alpine
+    # -- The gateway image pull policy
+    pullPolicy: IfNotPresent
