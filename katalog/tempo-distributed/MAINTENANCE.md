@@ -2,7 +2,7 @@
 
 To maintain the Tempo package, you should follow this steps.
 
-D```bash
+```bash
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 helm search repo grafana/tempo-distributed # get the latest chart version
@@ -18,6 +18,6 @@ helm template tempo-distributed /tmp/tempo-distributed -n observability --values
 With the `tempo-distributed-built.yaml` file, check differences with the current `deploy.yml` file and change accordingly.
 
 What was customized:
-
+- TODO
 
 
