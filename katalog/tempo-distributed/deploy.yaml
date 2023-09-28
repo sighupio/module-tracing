@@ -1,6 +1,6 @@
 ---
 # Source: tempo-distributed/templates/ingester/poddisruptionbudget-ingester.yaml
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: tempo-distributed-ingester

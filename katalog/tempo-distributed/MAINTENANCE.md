@@ -18,6 +18,6 @@ helm template tempo-distributed /tmp/tempo-distributed -n observability --values
 With the `tempo-distributed-built.yaml` file, check differences with the current `deploy.yml` file and change accordingly.
 
 What was customized:
-- TODO
 
-
+- nginx-unprivileged image was bumped to the latest available version
+- PodDisruptionBudget apiVersion bumped to policy/v1

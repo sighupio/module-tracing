@@ -10,11 +10,17 @@ namespace: observability
 
 resources:
   - ns.yaml
+  - datasource
   - deploy.yaml
 
 
-#images:
-#  - name: ghcr.io/kube-logging/logging-operator
-#    newName: registry.sighup.io/fury/banzaicloud/logging-operator
-#    newTag: 4.3.0
-
+images:
+  - name: docker.io/memcached
+    newName: registry.sighup.io/fury/memcached
+    newTag: "1.5.17-alpine"
+  - name: docker.io/grafana/tempo
+    newName: registry.sighup.io/fury/grafana/tempo
+    newTag: "2.2.2"
+  - name: docker.io/nginxinc/nginx-unprivileged
+    newName: registry.sighup.io/fury/nginxinc/nginx-unprivileged
+    newTag: "1.25-alpine"
