@@ -1,0 +1,497 @@
+# Copyright (c) 2020 SIGHUP s.r.l All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+name: license
+kind: pipeline
+type: docker
+
+steps:
+  - name: check
+    image: docker.io/library/golang:1.16
+    pull: always
+    commands:
+      - go get -u github.com/google/addlicense
+      - addlicense -c "SIGHUP s.r.l" -v -l bsd --check .
+
+---
+name: policeman
+kind: pipeline
+type: docker
+
+depends_on:
+  - license
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: lint
+    image: quay.io/sighup/policeman
+    pull: always
+    environment:
+      # Identifies false positives like missing 'selector'.
+      # Doing this is valid for Kustomize patches
+      VALIDATE_KUBERNETES_KUBEVAL: "false"
+      # Some duplicated code is intended.
+      VALIDATE_JSCPD: "false"
+      # hadolint already validated dockerfiles
+      VALIDATE_DOCKERFILE: "false"
+      # Disable natural language checks
+      VALIDATE_NATURAL_LANGUAGE: "false"
+
+    depends_on:
+      - clone
+
+  - name: render
+    image: quay.io/sighup/e2e-testing:1.1.0_0.2.2_2.16.1_1.9.4_1.19.11_3.8.7_2.4.1
+    pull: always
+    depends_on:
+      - clone
+    commands:
+      - kustomize build katalog/tempo-distributed > tempo-distributed.yml
+      - kustomize build katalog/minio-ha > minio-ha.yml
+
+  - &check-deprecated-apis
+    name: check-deprecated-apis
+    image: us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5
+    pull: always
+    depends_on:
+      - render
+    commands:
+      # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
+      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.26.0
+    environment:
+      KUBERNETES_MANIFESTS: cerebro.yml
+
+  - <<: *check-deprecated-apis
+    name: check-deprecated-apis-tempo-distributed
+    environment:
+      KUBERNETES_MANIFESTS: tempo-distributed.yml
+
+  - <<: *check-deprecated-apis
+    name: check-deprecated-apis-minio-ha
+    environment:
+      KUBERNETES_MANIFESTS: minio-ha.yml
+
+---
+name: unit-test
+kind: pipeline
+type: docker
+
+depends_on:
+  - policeman
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: katalog
+    image: quay.io/sighup/katalog:3.2.2_3
+    pull: always
+    depends_on: [ clone ]
+    commands:
+      - flake8 --ignore=E501 katalog/tests/test.py
+      - bash katalog/tests/pytest.sh
+      - rm -rf .pytest_cache katalog/tests/__pycache__
+    when:
+      event:
+      - push
+
+---
+name: e2e-kubernetes-1.24
+kind: pipeline
+type: docker
+
+depends_on:
+  - policeman
+
+node:
+  runner: internal
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  ref:
+    include:
+      - refs/heads/master
+      - refs/heads/main
+      - refs/tags/**
+
+steps:
+  - name: init
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.24.0
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ clone ]
+    settings:
+      action: custom-cluster-124
+      pipeline_id: cluster-124
+      local_kind_config_path: katalog/tests/kind/config.yml
+      cluster_version: '1.24.0'
+      instance_path: /shared
+      instance_size: 2-extra-large
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+
+  - name: e2e
+    image: quay.io/sighup/e2e-testing:1.1.0_0.7.0_3.1.1_1.9.4_1.24.1_3.8.7_4.21.1
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ init ]
+    commands:
+      - export KUBECONFIG=/shared/kube/kubeconfig-124
+      - bats -t katalog/tests/tests.sh
+
+  - name: destroy
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.24.0
+    pull: always
+    depends_on: [ e2e ]
+    settings:
+      action: destroy
+      pipeline_id: cluster-124
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+    when:
+      status:
+        - success
+        - failure
+
+volumes:
+  - name: shared
+    temp: {}
+---
+name: e2e-kubernetes-1.25
+kind: pipeline
+type: docker
+
+depends_on:
+  - policeman
+
+node:
+  runner: internal
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  ref:
+    include:
+      - refs/heads/master
+      - refs/heads/main
+      - refs/tags/**
+
+steps:
+  - name: init
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.25.3
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ clone ]
+    settings:
+      action: custom-cluster-125
+      pipeline_id: cluster-125
+      local_kind_config_path: katalog/tests/kind/config.yml
+      cluster_version: '1.25.3'
+      instance_path: /shared
+      instance_size: 2-extra-large
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+
+  - name: e2e
+    # KUBECTL 1.25.3 - KUSTOMIZE 3.5.3 - HELM 3.1.1 - YQ 4.21.1 - ISTIOCTL 1.9.4 - FURYCTL 0.9.0 - BATS 1.1.0
+    image: quay.io/sighup/e2e-testing:1.1.0_0.9.0_3.1.1_1.9.4_1.25.3_3.5.3_4.21.1
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ init ]
+    commands:
+      - export KUBECONFIG=/shared/kube/kubeconfig-125
+      - bats -t katalog/tests/tests.sh
+
+  - name: destroy
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.25.3
+    pull: always
+    depends_on: [ e2e ]
+    settings:
+      action: destroy
+      pipeline_id: cluster-125
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+    when:
+      status:
+        - success
+        - failure
+
+volumes:
+  - name: shared
+    temp: {}
+---
+name: e2e-kubernetes-1.26
+kind: pipeline
+type: docker
+
+depends_on:
+  - policeman
+
+node:
+  runner: internal
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  ref:
+    include:
+      - refs/heads/master
+      - refs/heads/main
+      - refs/tags/**
+
+steps:
+  - name: init
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.26.4
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ clone ]
+    settings:
+      action: custom-cluster-126
+      pipeline_id: cluster-126
+      local_kind_config_path: katalog/tests/kind/config.yml
+      cluster_version: '1.26.4'
+      instance_path: /shared
+      instance_size: 2-extra-large
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+
+  - name: e2e
+    # KUBECTL 1.25.3 - KUSTOMIZE 3.5.3 - HELM 3.1.1 - YQ 4.21.1 - ISTIOCTL 1.9.4 - FURYCTL 0.9.0 - BATS 1.1.0
+    image: quay.io/sighup/e2e-testing:1.1.0_0.11.0_3.1.1_1.9.4_1.26.3_3.5.3_4.33.3
+    pull: always
+    volumes:
+      - name: shared
+        path: /shared
+    depends_on: [ init ]
+    commands:
+      - export KUBECONFIG=/shared/kube/kubeconfig-126
+      - bats -t katalog/tests/tests.sh
+
+  - name: destroy
+    image: quay.io/sighup/e2e-testing-drone-plugin:v1.26.4
+    pull: always
+    depends_on: [ e2e ]
+    settings:
+      action: destroy
+      pipeline_id: cluster-126
+      aws_default_region:
+        from_secret: aws_region
+      aws_access_key_id:
+        from_secret: aws_access_key_id
+      aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      terraform_tf_states_bucket_name:
+        from_secret: terraform_tf_states_bucket_name
+      vsphere_server:
+        from_secret: vsphere_server
+      vsphere_password:
+        from_secret: vsphere_password
+      vsphere_user:
+        from_secret: vsphere_user
+      dockerhub_username:
+        from_secret: dockerhub_username
+      dockerhub_password:
+        from_secret: dockerhub_password
+    when:
+      status:
+        - success
+        - failure
+
+volumes:
+  - name: shared
+    temp: {}
+
+---
+name: release
+kind: pipeline
+type: docker
+
+depends_on:
+  - e2e-kubernetes-1.24
+  - e2e-kubernetes-1.25
+  - e2e-kubernetes-1.26
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  ref:
+    include:
+      - refs/tags/**
+
+steps:
+  - name: prepare-tar-gz
+    image: alpine:latest
+    pull: always
+    depends_on: [ clone ]
+    commands:
+      - tar -zcvf fury-kubernetes-observability-${DRONE_TAG}.tar.gz katalog/ LICENSE README.md
+    when:
+      ref:
+        include:
+          - refs/tags/**
+
+
+  - name: prepare-release-notes
+    image: quay.io/sighup/fury-release-notes-plugin:3.7_2.8.4
+    pull: always
+    depends_on: [ clone ]
+    settings:
+      release_notes_file_path: release-notes.md
+    when:
+      ref:
+        include:
+          - refs/tags/**
+
+  - name: publish-prerelease
+    image: plugins/github-release
+    pull: always
+    depends_on:
+      - prepare-tar-gz
+      - prepare-release-notes
+    settings:
+      api_key:
+        from_secret: github_token
+      file_exists: overwrite
+      files:
+        - fury-kubernetes-observability-${DRONE_TAG}.tar.gz
+      prerelease: true
+      overwrite: true
+      title: "Preview ${DRONE_TAG}"
+      note: release-notes.md
+      checksum:
+        - md5
+        - sha256
+    when:
+      ref:
+        include:
+          - refs/tags/v**-rc**
+
+  - name: publish-stable
+    image: plugins/github-release
+    pull: always
+    depends_on:
+      - prepare-tar-gz
+      - prepare-release-notes
+    settings:
+      api_key:
+        from_secret: github_token
+      file_exists: overwrite
+      files:
+        - fury-kubernetes-observability-${DRONE_TAG}.tar.gz
+      prerelease: false
+      overwrite: true
+      title: "Release ${DRONE_TAG}"
+      note: release-notes.md
+      checksum:
+        - md5
+        - sha256
+    when:
+      ref:
+        exclude:
+          - refs/tags/v**-rc**
+        include:
+          - refs/tags/v**
