@@ -720,7 +720,12 @@ spec:
             - containerPort: 7946
               name: http-memberlist
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -839,7 +844,12 @@ spec:
             initialDelaySeconds: 30
             timeoutSeconds: 1
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -939,7 +949,7 @@ spec:
       
       containers:
         - name: nginx
-          image: "docker.io/nginxinc/nginx-unprivileged:1.19-alpine"
+          image: "docker.io/nginxinc/nginx-unprivileged:1.25-alpine"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http-metrics
@@ -959,7 +969,12 @@ spec:
             - name: docker-entrypoint-d-override
               mountPath: /docker-entrypoint.d
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -1066,7 +1081,12 @@ spec:
             - containerPort: 3100
               name: http-metrics
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -1192,7 +1212,12 @@ spec:
             - containerPort: 9095
               name: grpc
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -1402,7 +1427,12 @@ spec:
             initialDelaySeconds: 30
             timeoutSeconds: 1
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -1510,7 +1540,12 @@ spec:
             - containerPort: 11211
               name: client
           resources:
-            {}
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

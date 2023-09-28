@@ -62,7 +62,13 @@ ingester:
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
     tag: null
-  # -- The name of the PriorityClass for ingester pods
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -100,6 +106,13 @@ distributor:
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
     tag: null
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
 
 # Configuration for the compactor
 compactor:
@@ -120,6 +133,13 @@ compactor:
     # -- Docker image tag for the compactor image. Overrides `tempo.image.tag`
     tag: null
   # -- The name of the PriorityClass for compactor pods
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
 
 # Configuration for the querier
 querier:
@@ -152,13 +172,26 @@ querier:
     repository: null
     # -- Docker image tag for the querier image. Overrides `tempo.image.tag`
     tag: null
-  # -- The name of the PriorityClass for querier pods
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
 
 # Configuration for the query-frontend
 queryFrontend:
   query:
     # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
     enabled: false
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
   
 # Configuration for the federation-frontend
 # Can only be enabled if enterprise.enabled is true - requires license.
@@ -255,6 +288,13 @@ memcached:
   # Number of replicas for memchached
   replicas: 1
   # -- Additional CLI args for memcached
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
  
 
 memcachedExporter:
@@ -336,6 +376,13 @@ gateway:
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
-    tag: 1.19-alpine
+    tag: 1.25-alpine
     # -- The gateway image pull policy
     pullPolicy: IfNotPresent
+  resources: 
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 512m 
+      memory: 1024Mi
