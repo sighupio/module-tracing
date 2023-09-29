@@ -23,7 +23,7 @@ Tempo is configured with the distributed approach. By default we configure 3 fix
 
 Each component has a default limit and request:
 
-```
+```yaml
 requests:
     cpu: 50m
     memory: 128Mi
