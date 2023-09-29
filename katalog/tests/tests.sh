@@ -17,14 +17,14 @@ set -o pipefail
   kubectl apply -f https://raw.githubusercontent.com/sighupio/fury-kubernetes-monitoring/v2.0.1/katalog/prometheus-operator/crds/0probeCustomResourceDefinition.yaml
 }
 
-@test "testing minio-ha apply" {
-  info
-  apply katalog/minio-ha
-}
-
 @test "testing tempo apply" {
   info
   apply katalog/tempo-distributed
+}
+
+@test "testing minio-ha apply" {
+  info
+  apply katalog/minio-ha
 }
 
 @test "wait for apply to settle and dump state to dump.json" {
