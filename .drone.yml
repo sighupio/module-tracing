@@ -63,11 +63,6 @@ steps:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
       - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.26.0
     environment:
-      KUBERNETES_MANIFESTS: cerebro.yml
-
-  - <<: *check-deprecated-apis
-    name: check-deprecated-apis-tempo-distributed
-    environment:
       KUBERNETES_MANIFESTS: tempo-distributed.yml
 
   - <<: *check-deprecated-apis
