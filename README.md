@@ -4,22 +4,22 @@
 </h1>
 
 ![Release](https://img.shields.io/badge/Latest%20Release-v1.0.0-blue)
-![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-logging?label=License)
+![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
 <!-- <KFD-DOCS> -->
 
-**Kubernetes Fury Observability** provides a tracing stack for the [Kubernetes Fury Distribution (KFD)][kfd-repo].
+**Kubernetes Fury Tracing** provides a tracing stack for the [Kubernetes Fury Distribution (KFD)][kfd-repo].
 
 If you are new to KFD please refer to the [official documentation][kfd-docs] on how to get started with KFD.
 
 ## Overview
 
-**Kubernetes Fury Observability** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
+**Kubernetes Fury Tracing** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
 
 The module right now contains only the [tempo][tempo-page] tool from grafana.
 
-All the components are deployed in the `observability` namespace in the cluster.
+All the components are deployed in the `tracing` namespace in the cluster.
 
 | Package                                        | Version                         | Description                     |
 | ---------------------------------------------- | ------------------------------- | ------------------------------- |
@@ -53,7 +53,7 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 
 ```yaml
 bases:
-  - name: observability
+  - name: tracing
     version: "v1.0.0"
 ```
 
@@ -61,7 +61,7 @@ bases:
 
 2. Execute `furyctl legacy vendor -H` to download the packages
 
-3. Inspect the download packages under `./vendor/katalog/observability`.
+3. Inspect the download packages under `./vendor/katalog/tracing`.
 
 4. Define a `kustomization.yaml` that includes the `./vendor/katalog/logging` directory as resource.
 
@@ -87,7 +87,7 @@ kustomize build . | kubectl apply -f -
 [furyctl-repo]: https://github.com/sighupio/furyctl
 [kustomize-repo]: https://github.com/kubernetes-sigs/kustomize
 [kfd-docs]: https://docs.kubernetesfury.com/docs/distribution/
-[compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-observability/blob/master/docs/COMPATIBILITY_MATRIX.md
+[compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-tracing/blob/master/docs/COMPATIBILITY_MATRIX.md
 
 <!-- </KFD-DOCS> -->
 
@@ -99,7 +99,7 @@ Before contributing, please read first the [Contributing Guidelines](docs/CONTRI
 
 ### Reporting Issues
 
-In case you experience any problems with the module, please [open a new issue](https://github.com/sighupio/fury-kubernetes-observability/issues/new/choose).
+In case you experience any problems with the module, please [open a new issue](https://github.com/sighupio/fury-kubernetes-tracing/issues/new/choose).
 
 ## License
 
