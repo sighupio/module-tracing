@@ -1,10 +1,6 @@
-# Copyright (c) 2017-present SIGHUP s.r.l All rights reserved.
-# Use of this source code is governed by a BSD-style
-# license that can be found in the LICENSE file.
-
 ---
 # Source: tempo-distributed/templates/ingester/poddisruptionbudget-ingester.yaml
-apiVersion: policy/v1
+apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: tempo-distributed-ingester
@@ -703,7 +699,7 @@ spec:
         app.kubernetes.io/component: compactor
         app.kubernetes.io/part-of: memberlist
       annotations:
-        checksum/config: 54c07349f4cddb8eeb3a357766463ebfdf943ad7df3a73dc7408e16324c14bb0
+        checksum/config: aa8197587a13b7b8032b61da0f8744dc9e50145032fed6b09e752c0385f4c3d6
     spec:
       serviceAccountName: tempo-distributed
       securityContext:
@@ -796,7 +792,7 @@ spec:
         app.kubernetes.io/component: distributor
         app.kubernetes.io/part-of: memberlist
       annotations:
-        checksum/config: 54c07349f4cddb8eeb3a357766463ebfdf943ad7df3a73dc7408e16324c14bb0
+        checksum/config: aa8197587a13b7b8032b61da0f8744dc9e50145032fed6b09e752c0385f4c3d6
     spec:
       serviceAccountName: tempo-distributed
       securityContext:
@@ -1063,7 +1059,7 @@ spec:
         app.kubernetes.io/component: querier
         app.kubernetes.io/part-of: memberlist
       annotations:
-        checksum/config: 54c07349f4cddb8eeb3a357766463ebfdf943ad7df3a73dc7408e16324c14bb0
+        checksum/config: aa8197587a13b7b8032b61da0f8744dc9e50145032fed6b09e752c0385f4c3d6
     spec:
       serviceAccountName: tempo-distributed
       securityContext:
@@ -1195,7 +1191,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: query-frontend
       annotations:
-        checksum/config: 54c07349f4cddb8eeb3a357766463ebfdf943ad7df3a73dc7408e16324c14bb0
+        checksum/config: aa8197587a13b7b8032b61da0f8744dc9e50145032fed6b09e752c0385f4c3d6
     spec:
       serviceAccountName: tempo-distributed
       securityContext:
@@ -1402,7 +1398,7 @@ spec:
         app.kubernetes.io/component: ingester
         app.kubernetes.io/part-of: memberlist
       annotations:
-        checksum/config: 54c07349f4cddb8eeb3a357766463ebfdf943ad7df3a73dc7408e16324c14bb0
+        checksum/config: aa8197587a13b7b8032b61da0f8744dc9e50145032fed6b09e752c0385f4c3d6
     spec:
       serviceAccountName: tempo-distributed
       securityContext:

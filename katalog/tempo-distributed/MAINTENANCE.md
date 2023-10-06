@@ -12,7 +12,7 @@ helm pull grafana/tempo-distributed --version 1.6.4 --untar --untardir /tmp # th
 Run the following command:
 
 ```bash
-helm template tempo-distributed /tmp/tempo-distributed -n observability --values MAINTENANCE.values.yaml > tempo-distributed-built.yaml
+helm template tempo-distributed /tmp/tempo-distributed -n tracing --values MAINTENANCE.values.yaml > tempo-distributed-built.yaml
 ```
 
 With the `tempo-distributed-built.yaml` file, check differences with the current `deploy.yml` file and change accordingly.

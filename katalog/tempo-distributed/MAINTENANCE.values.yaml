@@ -269,7 +269,7 @@ storage:
       access_key: 'minio'
       secret_key: 'minio123'
       bucket: 'tempo'
-      endpoint: 'minio-observability:9000'
+      endpoint: 'minio-tracing:9000'
       insecure: true
 
 # memcached is for all of the Tempo pieces to coordinate with each other.

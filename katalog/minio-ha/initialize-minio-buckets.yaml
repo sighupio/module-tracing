@@ -6,14 +6,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: minio-observability-buckets-setup
+  name: minio-tracing-buckets-setup
   labels:
-    app: minio-observability-buckets-setup
+    app: minio-tracing-buckets-setup
 spec:
   template:
     metadata:
       labels:
-        app: minio-observability-buckets-setup
+        app: minio-tracing-buckets-setup
     spec:
       serviceAccountName: wait-for-minio
       restartPolicy: OnFailure
@@ -31,14 +31,14 @@ spec:
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: minio-observability
+                name: minio-tracing
           command:
             - /bin/bash
             - -c
             - |
               set -e
-              mc --config-dir=/config config host add observability http://minio-observability.observability.svc.cluster.local:9000 ${ROOT_USER} ${ROOT_PASSWORD}
-              mc --config-dir=/config mb -p observability/tempo
+              mc --config-dir=/config config host add tracing http://minio-tracing.tracing.svc.cluster.local:9000 ${ROOT_USER} ${ROOT_PASSWORD}
+              mc --config-dir=/config mb -p tracing/tempo
           volumeMounts:
             - name: config
               mountPath: "/config"
@@ -72,4 +72,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: wait-for-minio
-    namespace: observability
+    namespace: tracing

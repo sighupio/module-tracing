@@ -9,30 +9,30 @@ metadata:
   labels:
     prometheus: k8s
     role: alert-rules
-  name: minio-observability-rules
-  namespace: observability
+  name: minio-tracing-rules
+  namespace: tracing
 spec:
   groups:
     - name: minio.rules
       rules:
-        - alert: MinioObservabilityClusterDiskOffline
-          expr: minio_cluster_disk_offline_total{job="minio-observability"} > 0
+        - alert: MinioTracingClusterDiskOffline
+          expr: minio_cluster_disk_offline_total{job="minio-tracing"} > 0
           for: 5m
           labels:
             severity: critical
           annotations:
             summary: Minio cluster disk offline (instance {{ $labels.instance }})
             description: "Minio cluster disk is offline\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-        - alert: MinioObservabilityNodeDiskOffline
-          expr: minio_cluster_nodes_offline_total{job="minio-observability"} > 0
+        - alert: MinioTracingNodeDiskOffline
+          expr: minio_cluster_nodes_offline_total{job="minio-tracing"} > 0
           for: 5m
           labels:
             severity: critical
           annotations:
             summary: Minio node disk offline (instance {{ $labels.instance }})
             description: "Minio cluster node disk is offline\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-        - alert: MinioObservabilityDiskSpaceUsage
-          expr: minio_cluster_capacity_usable_free_bytes{job="minio-observability"} / minio_cluster_capacity_usable_total_bytes{job="minio-observability"} * 100 < 10
+        - alert: MinioTracingDiskSpaceUsage
+          expr: minio_cluster_capacity_usable_free_bytes{job="minio-tracing"} / minio_cluster_capacity_usable_total_bytes{job="minio-tracing"} * 100 < 10
           for: 5m
           labels:
             severity: warning

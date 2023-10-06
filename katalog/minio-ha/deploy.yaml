@@ -8,18 +8,18 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: "minio-sa"
-  namespace: "observability"
+  namespace: "tracing"
 ---
 # Source: minio/templates/console-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-observability-console
-  namespace: "observability"
+  name: minio-tracing-console
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: minio-observability
+    release: minio-tracing
     heritage: Helm
 spec:
   type: ClusterIP
@@ -30,18 +30,18 @@ spec:
       targetPort: 9001
   selector:
     app: minio
-    release: minio-observability
+    release: minio-tracing
 ---
 # Source: minio/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-observability
-  namespace: "observability"
+  name: minio-tracing
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: minio-observability
+    release: minio-tracing
     heritage: Helm
     monitoring: "true"
 spec:
@@ -53,18 +53,18 @@ spec:
       targetPort: 9000
   selector:
     app: minio
-    release: minio-observability
+    release: minio-tracing
 ---
 # Source: minio/templates/statefulset.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-observability-svc
-  namespace: "observability"
+  name: minio-tracing-svc
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: "minio-observability"
+    release: "minio-tracing"
     heritage: "Helm"
 spec:
   publishNotReadyAddresses: true
@@ -76,35 +76,35 @@ spec:
       targetPort: 9000
   selector:
     app: minio
-    release: minio-observability
+    release: minio-tracing
 ---
 # Source: minio/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: minio-observability
-  namespace: "observability"
+  name: minio-tracing
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: minio-observability
+    release: minio-tracing
     heritage: Helm
 spec:
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: "Parallel"
-  serviceName: minio-observability-svc
+  serviceName: minio-tracing-svc
   replicas: 3
   selector:
     matchLabels:
       app: minio
-      release: minio-observability
+      release: minio-tracing
   template:
     metadata:
-      name: minio-observability
+      name: minio-tracing
       labels:
         app: minio
-        release: minio-observability
+        release: minio-tracing
     spec:
       affinity:
         podAntiAffinity:
@@ -116,7 +116,7 @@ spec:
                     - key: "release"
                       operator: In
                       values:
-                        - minio-observability
+                        - minio-tracing
                 topologyKey: "kubernetes.io/hostname"
       securityContext:
         runAsUser: 1000
@@ -130,7 +130,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command: [ "/bin/sh",
             "-ce",
-            "/usr/bin/docker-entrypoint.sh minio server  http://minio-observability-{0...2}.minio-observability-svc.observability.svc.cluster.local/export-{0...1} -S /etc/minio/certs/ --address :9000 --console-address :9001" ]
+            "/usr/bin/docker-entrypoint.sh minio server  http://minio-tracing-{0...2}.minio-tracing-svc.tracing.svc.cluster.local/export-{0...1} -S /etc/minio/certs/ --address :9000 --console-address :9001" ]
           volumeMounts:
             - name: export-0
               mountPath: /export-0
@@ -145,12 +145,12 @@ spec:
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: minio-observability
+                  name: minio-tracing
                   key: ROOT_USER
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: minio-observability
+                  name: minio-tracing
                   key: ROOT_PASSWORD
             - name: MINIO_PROMETHEUS_AUTH_TYPE
               value: "public"
@@ -161,7 +161,7 @@ spec:
       volumes:
         - name: minio-user
           secret:
-            secretName: minio-observability        
+            secretName: minio-tracing        
   volumeClaimTemplates:
     - metadata:
         name: export-0
@@ -182,34 +182,34 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
-  name: minio-observability-cluster
-  namespace: "observability"
+  name: minio-tracing-cluster
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: minio-observability
+    release: minio-tracing
     heritage: Helm
 spec:
-  jobName: minio-observability
+  jobName: minio-tracing
   prober:
-    url: minio-observability.observability:9000
+    url: minio-tracing.tracing:9000
     path: /minio/v2/metrics/cluster
     scheme: http
   targets:
     staticConfig:
       static:
-      - minio-observability.observability
+      - minio-tracing.tracing
 ---
 # Source: minio/templates/servicemonitor.yaml
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: minio-observability
-  namespace: "observability"
+  name: minio-tracing
+  namespace: "tracing"
   labels:
     app: minio
     chart: minio-5.0.7
-    release: minio-observability
+    release: minio-tracing
     heritage: Helm
 spec:
   endpoints:
@@ -218,9 +218,9 @@ spec:
       path: /minio/v2/metrics/node
   namespaceSelector:
     matchNames:
-      - "observability"
+      - "tracing"
   selector:
     matchLabels:
       app: minio
-      release: minio-observability
+      release: minio-tracing
       monitoring: "true"

@@ -42,7 +42,7 @@ set -o pipefail
 @test "check minio-ha" {
   info
   test(){
-    data=$(kubectl get sts -n observability -l app=minio -o json | jq '.items[] | select(.metadata.name == "minio-observability" and .status.replicas == .status.readyReplicas)')
+    data=$(kubectl get sts -n tracing -l app=minio -o json | jq '.items[] | select(.metadata.name == "minio-tracing" and .status.replicas == .status.readyReplicas)')
     if [ "${data}" == "" ]; then return 1; fi
   }
   loop_it test 60 5
@@ -53,7 +53,7 @@ set -o pipefail
 @test "check tempo-ingester" {
   info
   test(){
-    data=$(kubectl get sts -n observability -l app.kubernetes.io/component=ingester -o json | jq '.items[] | select(.metadata.name == "tempo-distributed-ingester" and .status.replicas == .status.readyReplicas)')
+    data=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq '.items[] | select(.metadata.name == "tempo-distributed-ingester" and .status.replicas == .status.readyReplicas)')
     if [ "${data}" == "" ]; then return 1; fi
   }
   loop_it test 60 5

@@ -9,7 +9,7 @@ Extract to a folder of your choice, for example: `/tmp/minio`.
 Run the following command:
 
 ```bash
-helm template minio-observability /tmp/minio/helm/minio --values MAINTENANCE.values.yaml -n observability > minio-built.yaml
+helm template minio-tracing /tmp/minio/helm/minio --values MAINTENANCE.values.yaml -n tracing > minio-built.yaml
 ```
 
 What was customized (what differs from the helm template command):

@@ -7,5 +7,5 @@ datasources:
   - name: Tempo
     type: tempo
     access: proxy
-    url: http://tempo-distributed-gateway.observability.svc.cluster.local:80
+    url: http://tempo-distributed-gateway.tracing.svc.cluster.local:80
     version: 1

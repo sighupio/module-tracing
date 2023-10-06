@@ -423,7 +423,7 @@ steps:
     pull: always
     depends_on: [ clone ]
     commands:
-      - tar -zcvf fury-kubernetes-observability-${DRONE_TAG}.tar.gz katalog/ LICENSE README.md
+      - tar -zcvf fury-kubernetes-tracing-${DRONE_TAG}.tar.gz katalog/ LICENSE README.md
     when:
       ref:
         include:
@@ -452,7 +452,7 @@ steps:
         from_secret: github_token
       file_exists: overwrite
       files:
-        - fury-kubernetes-observability-${DRONE_TAG}.tar.gz
+        - fury-kubernetes-tracing-${DRONE_TAG}.tar.gz
       prerelease: true
       overwrite: true
       title: "Preview ${DRONE_TAG}"
@@ -476,7 +476,7 @@ steps:
         from_secret: github_token
       file_exists: overwrite
       files:
-        - fury-kubernetes-observability-${DRONE_TAG}.tar.gz
+        - fury-kubernetes-tracing-${DRONE_TAG}.tar.gz
       prerelease: false
       overwrite: true
       title: "Release ${DRONE_TAG}"
