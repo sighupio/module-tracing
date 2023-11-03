@@ -1,6 +1,6 @@
 <h1>
     <img src="https://github.com/sighupio/fury-distribution/blob/main/docs/assets/fury-epta-white.png?raw=true" align="left" width="90" style="margin-right: 15px"/>
-    Kubernetes Fury Observability
+    Kubernetes Fury Tracing
 </h1>
 
 ![Release](https://img.shields.io/badge/Latest%20Release-v1.0.0-blue)
