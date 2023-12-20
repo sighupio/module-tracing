@@ -53,7 +53,7 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 ```yaml
 bases:
   - name: tracing
-    version: "v1.0.0"
+    version: "v1.0.1"
 ```
 
 > See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.
