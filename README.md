@@ -3,7 +3,7 @@
     Kubernetes Fury Tracing
 </h1>
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.0.1-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.0.2-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -53,7 +53,7 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 ```yaml
 bases:
   - name: tracing
-    version: "v1.0.1"
+    version: "v1.0.2"
 ```
 
 > See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.
