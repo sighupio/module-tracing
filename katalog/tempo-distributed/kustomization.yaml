@@ -24,3 +24,9 @@ images:
   - name: docker.io/nginxinc/nginx-unprivileged
     newName: registry.sighup.io/fury/nginxinc/nginx-unprivileged
     newTag: "1.25-alpine"
+
+configMapGenerator:
+  - name: tempo-distributed-config
+    namespace: tracing
+    files:
+      - configs/tempo.yaml
