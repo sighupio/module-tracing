@@ -48,6 +48,22 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 
 ### Deployment
 
+For the new deployment method, you should include the tracing module configuration in your `furyctl.yaml` file, specifically under the `spec.distribution.modules.tracing` section. This streamlined approach enhances the deployment process by seamlessly integrating with the Kubernetes Fury Distribution management tools.
+
+Here is an example snippet for the `furyctl.yaml` file that demonstrates how to configure the tracing module with Tempo as the tracing system and High Availability (HA) MinIO instance for storage:
+
+```yaml
+spec:
+  distribution:
+    modules:
+      tracing:
+        type: tempo
+```
+
+By adopting this configuration, you deploy the Tempo tracing system accompanied by an HA MinIO instance as the storage backend. This setup allows flexibility in choosing different storage backends and adjusting retention policies according to your needs. For more detailed information on configuring the tracing module, including alternative storage options and retention policy adjustments, refer to the [official documentation](https://docs.kubernetesfury.com/docs/furyctl/providers/kfddistribution#specdistributionmodulestracing).
+
+### Legacy Deployment
+
 1. List the packages you want to deploy and their version in a `Furyfile.yml`
 
 ```yaml
