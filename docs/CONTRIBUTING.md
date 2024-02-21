@@ -58,7 +58,7 @@ real release. For this you can use the target `bump-rc`.
 
 `bump-rc` works a bit differently in that it does not bump the versions in the
 `kustomization` files or `Furyfiles` as configured in `.bumpversion.cfg`. The
-assumption behind this being the considering that a pre-release is more like a
+assumption behind this being the considering that a prerelease is more like a
 draft release. Another difference of this target is, it expects the rc tag name as
 a variable `TAG` along with the `make` call. This is because it is otherwise
 quite difficult to interpret which is the target version for which a `rc` is
@@ -66,7 +66,7 @@ being created. So the example usage is:
 
 ```bash
 $ TAG=v1.9.2-rc1 make bump-rc
-# This essentially creates a tag `v1.9.2-rc1` which we can  push to github to create a pre-release
+# This essentially creates a tag `v1.9.2-rc1` which we can  push to github to create a prerelease
 ```
 
 Then, in order to release it(assuming from version `1.9.1` to `1.9.2` - so a
@@ -126,14 +126,14 @@ target is automatically called in the targets `lint` and `add-license`.
 ## Check-label
 
 This targets verifies that required labels for KFD modules exist in each
-kustomization file in the repo. The list of required labels and this
+kustomization file in the repository. The list of required labels and this
 check can be found
 [here](https://github.com/sighupio/ci-commons/blob/main/conftest/kustomization/kfd-labels.md).
 
 ## Deploy
 
 To deploy the components available under this module easily, some make targets
-are bundled in this repo. You can see the available option in the `make help`.
+are bundled in this repository. You can see the available option in the `make help`.
 To deploy a minimal working setup of this module, one could run the following
 command, which in turn triggers other make targets for individual components:
 
