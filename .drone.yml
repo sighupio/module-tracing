@@ -173,7 +173,7 @@ steps:
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
-      - e2e-kfddistribution
+      - e2e
     when:
       status:
         - success
@@ -261,7 +261,7 @@ steps:
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
-      - e2e-kfddistribution
+      - e2e
     when:
       status:
         - success
@@ -349,7 +349,7 @@ steps:
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
-      - e2e-kfddistribution
+      - e2e
     when:
       status:
         - success
