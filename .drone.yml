@@ -188,7 +188,6 @@ type: docker
 
 depends_on:
   - policeman
-  - e2e-kubernetes-1.26
 
 node:
   runner: internal
@@ -275,7 +274,6 @@ type: docker
 
 depends_on:
   - policeman
-  - e2e-kubernetes-1.27
 
 node:
   runner: internal
