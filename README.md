@@ -1,7 +1,9 @@
+<!-- markdownlint-disable MD033 MD045 -->
 <h1>
     <img src="https://github.com/sighupio/fury-distribution/blob/main/docs/assets/fury-epta-white.png?raw=true" align="left" width="90" style="margin-right: 15px"/>
     Kubernetes Fury Tracing
 </h1>
+<!-- markdownlint-enable MD033 MD045 -->
 
 ![Release](https://img.shields.io/badge/Latest%20Release-v1.0.2-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
@@ -17,7 +19,7 @@ If you are new to KFD please refer to the [official documentation][kfd-docs] on 
 
 **Kubernetes Fury Tracing** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
 
-The module right now contains only the [tempo][tempo-page] tool from grafana.
+The module right now contains only the [tempo][tempo-page] tool from Grafana.
 
 All the components are deployed in the `tracing` namespace in the cluster.
 
@@ -35,16 +37,16 @@ Click on each package to see its full documentation.
 | `1.26.x`           | :white_check_mark: | No known issues |
 | `1.27.x`           | :white_check_mark: | No known issues |
 
-Check the [compatibility matrix][compatibility-matrix] for additional informations about previous releases of the modules.
+Check the [compatibility matrix][compatibility-matrix] for additional information about previous releases of the modules.
 
 ## Usage
 
 ### Prerequisites
 
-| Tool                        | Version   | Description                                                                                                                                                    |
-| --------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool                        | Version    | Description                                                                                                                                                    |
+| --------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [furyctl][furyctl-repo]     | `>=0.25.0` | The recommended tool to download and manage KFD modules and their packages. To learn more about `furyctl` read the [official documentation][furyctl-repo].     |
-| [kustomize][kustomize-repo] | `>=3.5.3` | Packages are customized using `kustomize`. To learn how to create your customization layer with `kustomize`, please refer to the [repository][kustomize-repo]. |
+| [kustomize][kustomize-repo] | `>=3.5.3`  | Packages are customized using `kustomize`. To learn how to create your customization layer with `kustomize`, please refer to the [repository][kustomize-repo]. |
 
 ### Deployment
 
@@ -62,12 +64,12 @@ bases:
 
 3. Inspect the download packages under `./vendor/katalog/tracing`.
 
-4. Define a `kustomization.yaml` that includes the `./vendor/katalog/logging` directory as resource.
+4. Define a `kustomization.yaml` that includes the `./vendor/katalog/tracing` directory as resource.
 
 ```yaml
 resources:
-- ./vendor/katalog/logging/minio-ha
-- ./vendor/katalog/logging/tempo-distributed
+- ./vendor/katalog/tracing/minio-ha
+- ./vendor/katalog/tracing/tempo-distributed
 ```
 
 5. To deploy the packages to your cluster, execute:
