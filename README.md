@@ -1,4 +1,4 @@
-<!-- markdownlint-disable  -->
+<!-- markdownlint-disable MD033 MD045  -->
 <h1>
     <img src="https://github.com/sighupio/fury-distribution/blob/main/docs/assets/fury-epta-white.png?raw=true" align="left" width="90" style="margin-right: 15px"/>
     Kubernetes Fury Tracing
