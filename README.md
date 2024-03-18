@@ -1,9 +1,9 @@
-<!-- markdownlint-disable MD033 MD045  -->
+<!-- markdownlint-disable MD033 MD045 -->
 <h1>
     <img src="https://github.com/sighupio/fury-distribution/blob/main/docs/assets/fury-epta-white.png?raw=true" align="left" width="90" style="margin-right: 15px"/>
     Kubernetes Fury Tracing
 </h1>
-<!-- markdownlint-enable  -->
+<!-- markdownlint-enable MD033 MD045 -->
 
 ![Release](https://img.shields.io/badge/Latest%20Release-v1.0.2-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
