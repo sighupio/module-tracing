@@ -5,7 +5,7 @@
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.0.2-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.0.3-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -19,7 +19,7 @@ If you are new to KFD please refer to the [official documentation][kfd-docs] on 
 
 **Kubernetes Fury Tracing** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
 
-The module right now contains only the [tempo][tempo-page] tool from Grafana.
+The module contains the [tempo][tempo-page] tool from grafana.
 
 All the components are deployed in the `tracing` namespace in the cluster.
 
@@ -36,6 +36,8 @@ Click on each package to see its full documentation.
 | ------------------ | :----------------: | --------------- |
 | `1.26.x`           | :white_check_mark: | No known issues |
 | `1.27.x`           | :white_check_mark: | No known issues |
+| `1.28.x`           | :white_check_mark: | No known issues |
+| `1.29.x`           | :white_check_mark: | No known issues |
 
 Check the [compatibility matrix][compatibility-matrix] for additional information about previous releases of the modules.
 
@@ -50,12 +52,28 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 
 ### Deployment
 
+Include the tracing module configuration in your `furyctl.yaml` file, specifically under the `spec.distribution.modules.tracing` section. This streamlined approach enhances the deployment process by seamlessly integrating with the Kubernetes Fury Distribution management tools.
+
+Here is an example snippet for the `furyctl.yaml` file that demonstrates how to configure the tracing module with Tempo as the tracing system and High Availability (HA) MinIO instance for storage:
+
+```yaml
+spec:
+  distribution:
+    modules:
+      tracing:
+        type: tempo
+        minio:
+          storageSize: "20Gi"
+```
+
+### Legacy Deployment
+
 1. List the packages you want to deploy and their version in a `Furyfile.yml`
 
 ```yaml
 bases:
   - name: tracing
-    version: "v1.0.2"
+    version: "v1.0.3"
 ```
 
 > See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.

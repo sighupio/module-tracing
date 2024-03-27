@@ -23,7 +23,7 @@ set -o pipefail
   apply katalog/minio-ha
 }
 
-@test "wait for apply to settle and dump state to dump.json" {
+@test "wait for apply to settle minio and dump state to dump.json" {
   info
   max_retry=0
   echo "=====" $max_retry "=====" >&2
@@ -40,7 +40,7 @@ set -o pipefail
   apply katalog/tempo-distributed
 }
 
-@test "wait for apply to settle and dump state to dump.json" {
+@test "wait for apply to settle tempo-distributed and dump state to dump.json" {
   info
   max_retry=0
   echo "=====" $max_retry "=====" >&2
