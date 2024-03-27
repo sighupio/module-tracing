@@ -47,7 +47,6 @@ kustomize build | kubectl apply -f -
 [prometheus-operator]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/prometheus-operator
 [grafana]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/grafana
 
-
 <!-- </KFD-DOCS> -->
 
 ## License
