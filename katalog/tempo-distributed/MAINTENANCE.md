@@ -1,6 +1,6 @@
 # Tempo - maintenance
 
-To maintain the Tempo package, you should follow this steps.
+To maintain the Tempo package, you should follow these steps.
 
 ```bash
 helm repo add grafana https://grafana.github.io/helm-charts
