@@ -113,8 +113,6 @@ platform:
 trigger:
   ref:
     include:
-      - refs/heads/master
-      - refs/heads/main
       - refs/tags/**
 
 steps:
@@ -199,8 +197,6 @@ platform:
 trigger:
   ref:
     include:
-      - refs/heads/master
-      - refs/heads/main
       - refs/tags/**
 
 steps:
@@ -285,8 +281,6 @@ platform:
 trigger:
   ref:
     include:
-      - refs/heads/master
-      - refs/heads/main
       - refs/tags/**
 
 steps:
