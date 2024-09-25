@@ -70,10 +70,8 @@ spec:
 
 To send traces form an instrumented application to Tempo, point the application to the Distributor's service:
 
-
 ```plaintext
 tempo-distributed-distributor.tracing.svc.cluster.local:4317/
-```
 
 > [!NOTE]
 > `4317` is the port for the OpenTelemetry Protocol (OTLP), the Distributor supports other protocols but it is recommended to use OTLP for performance reasons.
