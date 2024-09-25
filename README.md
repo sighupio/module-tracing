@@ -66,6 +66,19 @@ spec:
           storageSize: "20Gi"
 ```
 
+#### Sending Traces to Tempo
+
+To send traces form an instrumented application to Tempo, point the application to the Distributor's service:
+
+```plaintext
+tempo-distributed-distributor.tracing.svc.cluster.local:4317/
+
+> [!NOTE]
+> `4317` is the port for the OpenTelemetry Protocol (OTLP), the Distributor supports other protocols but it is recommended to use OTLP for performance reasons.
+
+> [!WARNING]
+> For production workloads, it is better to use something like the [OpenTelemetry Collector][otel-collector] instead of pushing the traces directly to Tempo, so the application can oflload the traces quickly and minimize impact on the application's performance.
+
 ### Legacy Deployment
 
 1. List the packages you want to deploy and their version in a `Furyfile.yml`
@@ -107,6 +120,7 @@ kustomize build . | kubectl apply -f -
 [kustomize-repo]: https://github.com/kubernetes-sigs/kustomize
 [kfd-docs]: https://docs.kubernetesfury.com/docs/distribution/
 [compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-tracing/blob/master/docs/COMPATIBILITY_MATRIX.md
+[otel-collector]: https://opentelemetry.io/docs/collector/#when-to-use-a-collector
 
 <!-- </KFD-DOCS> -->
 
