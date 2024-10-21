@@ -20,7 +20,7 @@ images:
     newTag: "1.5.17-alpine"
   - name: docker.io/grafana/tempo
     newName: registry.sighup.io/fury/grafana/tempo
-    newTag: "2.3.1"
+    newTag: "2.6.0"
   - name: docker.io/nginxinc/nginx-unprivileged
     newName: registry.sighup.io/fury/nginxinc/nginx-unprivileged
     newTag: "1.25-alpine"
