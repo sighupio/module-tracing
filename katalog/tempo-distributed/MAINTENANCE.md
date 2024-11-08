@@ -6,7 +6,7 @@ To maintain the Tempo package, you should follow these steps.
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 helm search repo grafana/tempo-distributed # get the latest chart version
-helm pull grafana/tempo-distributed --version 1.8.4 --untar --untardir /tmp # this command will download the chart in /tmp/tempo-distributed
+helm pull grafana/tempo-distributed --version 1.19.0 --untar --untardir /tmp # this command will download the chart in /tmp/tempo-distributed
 ```
 
 Run the following command:
