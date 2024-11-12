@@ -96,8 +96,6 @@ query_frontend:
     concurrent_jobs: 1000
     target_bytes_per_job: 104857600
   trace_by_id:
-    hedge_requests_at: 2s
-    hedge_requests_up_to: 2
     query_shards: 50
 server:
   grpc_server_max_recv_msg_size: 4194304
