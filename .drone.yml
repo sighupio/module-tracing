@@ -103,9 +103,6 @@ type: docker
 depends_on:
   - policeman
 
-node:
-  runner: internal
-
 platform:
   os: linux
   arch: amd64
@@ -186,9 +183,6 @@ type: docker
 depends_on:
   - policeman
 
-node:
-  runner: internal
-
 platform:
   os: linux
   arch: amd64
@@ -268,9 +262,6 @@ type: docker
 
 depends_on:
   - policeman
-
-node:
-  runner: internal
 
 platform:
   os: linux
