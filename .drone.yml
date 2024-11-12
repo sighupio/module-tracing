@@ -45,7 +45,7 @@ steps:
       - clone
 
   - name: render
-    image: quay.io/sighup/e2e-testing:1.1.0_0.2.2_2.16.1_1.9.4_1.19.11_3.8.7_2.4.1
+    image: quay.io/sighup/e2e-testing:1.1.0_3.12.0_1.31.1_3.10.0_4.33.3
     pull: always
     depends_on:
       - clone
@@ -61,7 +61,7 @@ steps:
       - render
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
-      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.26.0
+      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.31.0
     environment:
       KUBERNETES_MANIFESTS: tempo-distributed.yml
 
@@ -96,15 +96,12 @@ steps:
       - push
 
 ---
-name: e2e-kubernetes-1.26
+name: e2e-kubernetes-1.29
 kind: pipeline
 type: docker
 
 depends_on:
   - policeman
-
-node:
-  runner: internal
 
 platform:
   os: linux
@@ -117,13 +114,13 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.29.1_3.10.0
     pull: always
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     environment:
-      CLUSTER_VERSION: v1.26.6
+      CLUSTER_VERSION: v1.29.8
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -146,8 +143,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    # KUBECTL 1.27.1 - KUSTOMIZE 3.5.3 - HELM 3.1.1 - YQ 4.21.1 - ISTIOCTL 1.9.4 - FURYCTL 0.9.0 - BATS 1.1.0
-    image: quay.io/sighup/e2e-testing:1.1.0_0.11.0_3.1.1_1.9.4_1.26.3_3.5.3_4.33.3
+    image: quay.io/sighup/e2e-testing:1.1.0_1.29.1_3.10.0_4.33.3
     pull: always
     network_mode: host
     environment:
@@ -159,7 +155,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.29.1_3.10.0
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -180,15 +176,12 @@ volumes:
     host:
       path: /var/run/docker.sock
 ---
-name: e2e-kubernetes-1.27
+name: e2e-kubernetes-1.30
 kind: pipeline
 type: docker
 
 depends_on:
   - policeman
-
-node:
-  runner: internal
 
 platform:
   os: linux
@@ -201,13 +194,13 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.30.5_4.5.2
     pull: always
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     environment:
-      CLUSTER_VERSION: v1.27.3
+      CLUSTER_VERSION: v1.30.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -230,8 +223,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    # KUBECTL 1.27.1 - KUSTOMIZE 3.5.3 - HELM 3.1.1 - YQ 4.21.1 - ISTIOCTL 1.9.4 - FURYCTL 0.9.0 - BATS 1.1.0
-    image: quay.io/sighup/e2e-testing:1.1.0_0.11.0_3.1.1_1.9.4_1.26.3_3.5.3_4.33.3
+    image: quay.io/sighup/e2e-testing:1.1.0_3.12.0_1.30.5_3.10.0_4.33.3
     pull: always
     network_mode: host
     environment:
@@ -243,7 +235,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.30.5_4.5.2
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -264,15 +256,12 @@ volumes:
     host:
       path: /var/run/docker.sock
 ---
-name: e2e-kubernetes-1.28
+name: e2e-kubernetes-1.31
 kind: pipeline
 type: docker
 
 depends_on:
   - policeman
-
-node:
-  runner: internal
 
 platform:
   os: linux
@@ -285,13 +274,13 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.31.1_4.5.2
     pull: always
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     environment:
-      CLUSTER_VERSION: v1.28.0
+      CLUSTER_VERSION: v1.31.1
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -314,8 +303,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    # KUBECTL 1.27.1 - KUSTOMIZE 3.5.3 - HELM 3.1.1 - YQ 4.21.1 - ISTIOCTL 1.9.4 - FURYCTL 0.9.0 - BATS 1.1.0
-    image: quay.io/sighup/e2e-testing:1.1.0_0.11.0_3.1.1_1.9.4_1.26.3_3.5.3_4.33.3
+    image: quay.io/sighup/e2e-testing:1.1.0_3.12.0_1.31.1_3.10.0_4.33.3
     pull: always
     network_mode: host
     environment:
@@ -327,7 +315,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.20.0_1.29.1_3.10.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.24.0_1.31.1_4.5.2
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -353,9 +341,9 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - e2e-kubernetes-1.26
-  - e2e-kubernetes-1.27
-  - e2e-kubernetes-1.28
+  - e2e-kubernetes-1.29
+  - e2e-kubernetes-1.30
+  - e2e-kubernetes-1.31
 
 platform:
   os: linux
