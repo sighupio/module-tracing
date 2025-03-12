@@ -434,7 +434,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.27.0.0_1.32.2_5.6.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.27.0_1.32.2_5.6.0
     pull: always
     volumes:
       - name: dockersock
@@ -475,7 +475,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.27.0.0_1.32.2_5.6.0
+    image: quay.io/sighup/dind-kind-kubectl-kustomize:0.27.0_1.32.2_5.6.0
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
