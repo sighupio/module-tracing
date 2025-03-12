@@ -5,7 +5,7 @@
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.0.3-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.1.1-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -38,6 +38,9 @@ Click on each package to see its full documentation.
 | `1.27.x`           | :white_check_mark: | No known issues |
 | `1.28.x`           | :white_check_mark: | No known issues |
 | `1.29.x`           | :white_check_mark: | No known issues |
+| `1.30.x`           | :white_check_mark: | No known issues |
+| `1.31.x`           | :white_check_mark: | No known issues |
+| `1.32.x`           | :white_check_mark: | No known issues |
 
 Check the [compatibility matrix][compatibility-matrix] for additional information about previous releases of the modules.
 
