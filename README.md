@@ -5,7 +5,7 @@
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.1.1-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.2.0-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
