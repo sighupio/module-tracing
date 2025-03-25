@@ -129,7 +129,7 @@ steps:
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
     commands:
       # create a custom config to disable Kind's default CNI so
-      # we can test using KFD's networking module.
+      # we can test using SD's networking module.
       - |
         cat <<EOF > kind-config.yaml
         kind: Cluster
@@ -209,7 +209,7 @@ steps:
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
     commands:
       # create a custom config to disable Kind's default CNI so
-      # we can test using KFD's networking module.
+      # we can test using SD's networking module.
       - |
         cat <<EOF > kind-config.yaml
         kind: Cluster
@@ -289,7 +289,7 @@ steps:
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
     commands:
       # create a custom config to disable Kind's default CNI so
-      # we can test using KFD's networking module.
+      # we can test using SD's networking module.
       - |
         cat <<EOF > kind-config.yaml
         kind: Cluster
@@ -370,7 +370,7 @@ steps:
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
     commands:
       # create a custom config to disable Kind's default CNI so
-      # we can test using KFD's networking module.
+      # we can test using SD's networking module.
       - |
         cat <<EOF > kind-config.yaml
         kind: Cluster

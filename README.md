@@ -1,7 +1,11 @@
 <!-- markdownlint-disable MD033 MD045 -->
-<h1>
-    <img src="https://github.com/sighupio/fury-distribution/blob/main/docs/assets/fury-epta-white.png?raw=true" align="left" width="90" style="margin-right: 15px"/>
-    Kubernetes Fury Tracing
+<h1 align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sighupio/distribution/refs/heads/main/docs/assets/white-logo.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/sighupio/distribution/refs/heads/main/docs/assets/black-logo.png">
+  <img alt="Shows a black logo in light color mode and a white one in dark color mode." src="https://raw.githubusercontent.com/sighupio/distribution/refs/heads/main/docs/assets/white-logo.png">
+</picture><br/>
+  Tracing Module
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
@@ -9,15 +13,15 @@
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
-<!-- <KFD-DOCS> -->
+<!-- <SD-DOCS> -->
 
-**Kubernetes Fury Tracing** provides a tracing stack for the [Kubernetes Fury Distribution (KFD)][kfd-repo].
+**Tracing Module** provides a tracing stack for the [SIGHUP Distribution (SD)][kfd-repo].
 
-If you are new to KFD please refer to the [official documentation][kfd-docs] on how to get started with KFD.
+If you are new to SD please refer to the [official documentation][kfd-docs] on how to get started with SD.
 
 ## Overview
 
-**Kubernetes Fury Tracing** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
+**Tracing Module** uses a collection of open source tools to provide the most resilient and robust tracing stack for the cluster.
 
 The module contains the [tempo][tempo-page] tool from grafana.
 
@@ -47,12 +51,12 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 
 | Tool                        | Version    | Description                                                                                                                                                    |
 | --------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [furyctl][furyctl-repo]     | `>=0.25.0` | The recommended tool to download and manage KFD modules and their packages. To learn more about `furyctl` read the [official documentation][furyctl-repo].     |
+| [furyctl][furyctl-repo]     | `>=0.25.0` | The recommended tool to download and manage SD modules and their packages. To learn more about `furyctl` read the [official documentation][furyctl-repo].     |
 | [kustomize][kustomize-repo] | `>=3.5.3`  | Packages are customized using `kustomize`. To learn how to create your customization layer with `kustomize`, please refer to the [repository][kustomize-repo]. |
 
 ### Deployment
 
-Include the tracing module configuration in your `furyctl.yaml` file, specifically under the `spec.distribution.modules.tracing` section. This streamlined approach enhances the deployment process by seamlessly integrating with the Kubernetes Fury Distribution management tools.
+Include the tracing module configuration in your `furyctl.yaml` file, specifically under the `spec.distribution.modules.tracing` section. This streamlined approach enhances the deployment process by seamlessly integrating with the SIGHUP Distribution management tools.
 
 Here is an example snippet for the `furyctl.yaml` file that demonstrates how to configure the tracing module with Tempo as the tracing system and High Availability (HA) MinIO instance for storage:
 
@@ -122,7 +126,7 @@ kustomize build . | kubectl apply -f -
 [compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-tracing/blob/master/docs/COMPATIBILITY_MATRIX.md
 [otel-collector]: https://opentelemetry.io/docs/collector/#when-to-use-a-collector
 
-<!-- </KFD-DOCS> -->
+<!-- </SD-DOCS> -->
 
 <!-- <FOOTER> -->
 

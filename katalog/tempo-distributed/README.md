@@ -1,6 +1,6 @@
 # Tempo
 
-<!-- <KFD-DOCS> -->
+<!-- <SD-DOCS> -->
 
 Grafana Tempo is an open source, easy-to-use, and high-scale distributed tracing backend. Tempo is cost-efficient, requiring only object storage to operate, and is deeply integrated with Grafana, Prometheus, and Loki. Tempo can ingest common open source tracing protocols, including Jaeger, Zipkin, and OpenTelemetry.
 
@@ -8,8 +8,8 @@ Grafana Tempo is an open source, easy-to-use, and high-scale distributed tracing
 
 - Kubernetes >= `1.24.0`
 - Kustomize >= `v3.5.3`
-- [prometheus-operator from KFD monitoring module][prometheus-operator]
-- [grafana from KFD monitoring module][grafana]
+- [prometheus-operator from SD monitoring module][prometheus-operator]
+- [grafana from SD monitoring module][grafana]
 
 ## Image repository
 
@@ -47,7 +47,7 @@ kustomize build | kubectl apply -f -
 [prometheus-operator]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/prometheus-operator
 [grafana]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/grafana
 
-<!-- </KFD-DOCS> -->
+<!-- </SD-DOCS> -->
 
 ## License
 
