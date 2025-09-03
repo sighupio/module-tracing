@@ -149,7 +149,7 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: v1.29.8
+      CLUSTER_VERSION: 1.29.8
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -261,7 +261,7 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: v1.30.4
+      CLUSTER_VERSION: 1.30.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -373,7 +373,7 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: v1.31.1
+      CLUSTER_VERSION: 1.31.1
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -486,7 +486,7 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: v1.32.2
+      CLUSTER_VERSION: 1.32.2
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -579,6 +579,7 @@ type: docker
 
 depends_on:
   - policeman
+  - e2e-kubernetes-1.31
 
 platform:
   os: linux
@@ -598,7 +599,7 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: v1.33.4
+      CLUSTER_VERSION: 1.33.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
