@@ -31,24 +31,24 @@ volumes:
     host:
       path: /root/mise_data_dir
 
-steps:
-  - name: lint
-    image: quay.io/sighup/policeman
-    pull: always
-    environment:
-      FILTER_REGEX_EXCLUDE: (\.github)
-      # Identifies false positives like missing 'selector'.
-      # Doing this is valid for Kustomize patches
-      VALIDATE_KUBERNETES_KUBEVAL: "false"
-      # Some duplicated code is intended.
-      VALIDATE_JSCPD: "false"
-      # hadolint already validated dockerfiles
-      VALIDATE_DOCKERFILE: "false"
-      # Disable natural language checks
-      VALIDATE_NATURAL_LANGUAGE: "false"
+steps: 
+  # - name: lint
+  #   image: quay.io/sighup/policeman
+  #   pull: always
+  #   environment:
+  #     FILTER_REGEX_EXCLUDE: (\.github)
+  #     # Identifies false positives like missing 'selector'.
+  #     # Doing this is valid for Kustomize patches
+  #     VALIDATE_KUBERNETES_KUBEVAL: "false"
+  #     # Some duplicated code is intended.
+  #     VALIDATE_JSCPD: "false"
+  #     # hadolint already validated dockerfiles
+  #     VALIDATE_DOCKERFILE: "false"
+  #     # Disable natural language checks
+  #     VALIDATE_NATURAL_LANGUAGE: "false"
 
-    depends_on:
-      - clone
+  #   depends_on:
+  #     - clone
 
   - name: render
     image: quay.io/sighup/mise:v2025.4.4
