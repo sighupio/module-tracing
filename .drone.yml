@@ -109,7 +109,7 @@ steps:
         path: /mise-data
     depends_on: [ clone ]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise use python@3.12
       - python -m venv venv && . venv/bin/activate && pip install flake8 pytest && export PATH="./venv/bin:$PATH" 
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
