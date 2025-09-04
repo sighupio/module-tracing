@@ -63,7 +63,7 @@ steps:
     depends_on:
       - clone
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - kustomize build katalog/tempo-distributed > tempo-distributed.yml
       - kustomize build katalog/minio-ha > minio-ha.yml
 
@@ -109,7 +109,7 @@ steps:
         path: /mise-data
     depends_on: [ clone ]
     commands:
-      - eval "$(mise activate bash --shims)" && mise use python@3.12
+      - eval "$(mise activate bash --shims)" && mise install  && mise use python@3.12
       - python -m venv venv && . venv/bin/activate && pip install flake8 pytest && export PATH="./venv/bin:$PATH" 
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
@@ -156,7 +156,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -188,7 +188,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -206,7 +206,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -261,7 +261,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -293,7 +293,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -311,7 +311,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -366,7 +366,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -398,7 +398,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -415,7 +415,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -471,7 +471,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -503,7 +503,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -521,7 +521,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -577,7 +577,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -609,7 +609,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -627,7 +627,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)" && mise install 
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
