@@ -55,7 +55,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
     volumes:
@@ -64,9 +63,7 @@ steps:
     depends_on:
       - clone
     commands:
-      - |
-        mise use kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - kustomize build katalog/tempo-distributed > tempo-distributed.yml
       - kustomize build katalog/minio-ha > minio-ha.yml
 
@@ -105,7 +102,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
     volumes:
@@ -113,9 +109,7 @@ steps:
         path: /mise-data
     depends_on: [ clone ]
     commands:
-      - |
-        mise use python@3.12.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - python -m venv venv && . venv/bin/activate && pip install flake8 pytest && export PATH="./venv/bin:$PATH" 
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
@@ -147,7 +141,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       KIND_VERSION: 0.30.0
@@ -163,9 +156,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION} kubectl@1.29.8 kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -187,7 +178,6 @@ steps:
     network_mode: host
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -198,9 +188,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - |
-        mise use bats@1.1.0 furyctl@v0.27.2
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -208,7 +196,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
@@ -219,9 +206,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION}
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -261,7 +246,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       KIND_VERSION: 0.30.0
@@ -277,9 +261,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION} kubectl@1.30.4 kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -301,7 +283,6 @@ steps:
     network_mode: host
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -312,9 +293,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - |
-        mise use bats@1.1.0 furyctl@v0.27.2
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -322,7 +301,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
@@ -333,9 +311,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION}
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -375,7 +351,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       KIND_VERSION: 0.30.0
@@ -391,9 +366,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION} kubectl@1.31.1 kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -415,7 +388,6 @@ steps:
     network_mode: host
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -426,9 +398,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - |
-        mise use bats@1.1.0 furyctl@v0.27.2
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -436,7 +406,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -446,9 +415,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION}
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -489,7 +456,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       KIND_VERSION: 0.30.0
@@ -505,9 +471,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION} kubectl@1.32.2 kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -529,7 +493,6 @@ steps:
     network_mode: host
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -540,9 +503,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - |
-        mise use bats@1.1.0 furyctl@v0.32.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -550,7 +511,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
@@ -561,9 +521,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION}
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
@@ -604,7 +562,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       KIND_VERSION: 0.30.0
@@ -620,9 +577,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION} kubectl@1.33.4 kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -644,7 +599,6 @@ steps:
     network_mode: host
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -655,9 +609,7 @@ steps:
         path: /mise-data
     depends_on: [create Kind cluster]
     commands:
-      - |
-        mise use bats@1.1.0 furyctl@v0.32.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
@@ -665,7 +617,6 @@ steps:
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
@@ -676,9 +627,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     commands:
-      - |
-        mise use kind@$${KIND_VERSION}
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
     depends_on:
