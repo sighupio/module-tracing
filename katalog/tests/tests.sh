@@ -70,6 +70,7 @@ set -o pipefail
     if [ "${data}" == "" ]; then return 1; fi
   }
   loop_it test 180 5
+  sleep 200
   status=${loop_it_result}
   if [[ "$status" -ne 0 ]]; then
     echo "Debug info: kubectl get sts output:"
