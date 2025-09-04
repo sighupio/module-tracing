@@ -116,6 +116,7 @@ steps:
       - |
         mise use python@3.12.0
         eval "$(mise activate bash --shims)"
+      - python -m venv venv && source venv/bin/activate
       - pip install flake8 pytest
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
