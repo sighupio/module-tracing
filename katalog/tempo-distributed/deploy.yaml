@@ -146,6 +146,17 @@ data:
         location = /compactor/ring {
           proxy_pass       http://tempo-distributed-compactor.tracing.svc.cluster.local:3100$request_uri;
         }
+      # OTLP gRPC
+      server {
+        listen               4317 http2;
+    
+        location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
+          grpc_pass          grpc://tempo-distributed-distributor.tracing.svc.cluster.local:4317;
+        }
+    
+        location ~ /opentelemetry {
+          grpc_pass          grpc://tempo-distributed-distributor.tracing.svc.cluster.local:4317;
+        }
       }
     }
 ---
