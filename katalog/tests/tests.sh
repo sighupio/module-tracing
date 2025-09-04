@@ -69,13 +69,7 @@ set -o pipefail
     data=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq '.items[] | select(.metadata.name == "tempo-distributed-ingester" and .status.replicas == .status.readyReplicas)')
     if [ "${data}" == "" ]; then return 1; fi
   }
-  loop_it test 180 5
-  sleep 200
+  loop_it test 60 5
   status=${loop_it_result}
-  if [[ "$status" -ne 0 ]]; then
-    echo "Debug info: kubectl get sts output:"
-    kubectl get sts -n tracing -l app.kubernetes.io/component=ingester
-  fi
-
   [[ "$status" -eq 0 ]]
 }
