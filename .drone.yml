@@ -149,7 +149,8 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: 1.29.8
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.29.8
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -162,7 +163,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION} kubectl@1.29.8 kustomize@5.6.0
+        mise use kind@$${KIND_VERSION} kubectl@1.29.8 kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
@@ -207,6 +208,7 @@ steps:
     environment:
       MISE_DATA_DIR: /mise-data
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
+      KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -217,7 +219,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION}
+        mise use kind@$${KIND_VERSION}
         eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
@@ -261,7 +263,8 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: 1.30.4
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.30.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -274,7 +277,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION} kubectl@1.30.4 kustomize@5.6.0
+        mise use kind@$${KIND_VERSION} kubectl@1.30.4 kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
@@ -319,6 +322,7 @@ steps:
     environment:
       MISE_DATA_DIR: /mise-data
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
+      KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -329,7 +333,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION}
+        mise use kind@$${KIND_VERSION}
         eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
@@ -373,7 +377,8 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: 1.31.1
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.31.1
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -386,7 +391,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION} kubectl@1.31.1 kustomize@5.6.0
+        mise use kind@$${KIND_VERSION} kubectl@1.31.1 kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
@@ -441,7 +446,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION}
+        mise use kind@$${KIND_VERSION}
         eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
@@ -486,7 +491,8 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: 1.32.2
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.32.2
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -499,7 +505,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION} kubectl@1.32.2 kustomize@5.6.0
+        mise use kind@$${KIND_VERSION} kubectl@1.32.2 kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
@@ -544,6 +550,7 @@ steps:
     environment:
       MISE_DATA_DIR: /mise-data
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
+      KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -554,7 +561,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION}
+        mise use kind@$${KIND_VERSION}
         eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
@@ -599,7 +606,8 @@ steps:
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
-      CLUSTER_VERSION: 1.33.4
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.33.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       # /drone/src is the default workdir for the pipeline
       # using this folder we don't need to mount another
@@ -612,7 +620,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION} kubectl@1.33.4 kustomize@5.6.0
+        mise use kind@$${KIND_VERSION} kubectl@1.33.4 kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
@@ -657,6 +665,7 @@ steps:
     environment:
       MISE_DATA_DIR: /mise-data
       MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
+      KIND_VERSION: 0.30.0
       GITHUB_TOKEN:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
@@ -667,7 +676,7 @@ steps:
         path: /mise-data
     commands:
       - |
-        mise use kind@$${CLUSTER_VERSION}
+        mise use kind@$${KIND_VERSION}
         eval "$(mise activate bash --shims)"
       # does not matter if the command fails
       - kind delete cluster --name $${CLUSTER_NAME} || true
