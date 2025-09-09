@@ -9,7 +9,7 @@
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.2.0-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.3.0-blue)
 ![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -29,7 +29,7 @@ All the components are deployed in the `tracing` namespace in the cluster.
 
 | Package                                        | Version                         | Description                     |
 | ---------------------------------------------- | ------------------------------- | ------------------------------- |
-| [tempo-distributed](katalog/tempo-distributed) | `2.3.1`                         | Distributed Tempo deployment    |
+| [tempo-distributed](katalog/tempo-distributed) | `2.8.2`                         | Distributed Tempo deployment    |
 | [minio-ha](katalog/minio-ha)                   | `vRELEASE.2023-01-12T02-06-16Z` | Three nodes HA MinIO deployment |
 
 Click on each package to see its full documentation.
