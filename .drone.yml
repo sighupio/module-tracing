@@ -15,7 +15,7 @@ steps:
       - addlicense -c "SIGHUP s.r.l" -v -l bsd -y "2017-present" --check .
 
 ---
-name: policeman
+name: render
 kind: pipeline
 type: docker
 
@@ -90,7 +90,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
 
 platform:
   os: linux
@@ -109,8 +109,8 @@ steps:
         path: /mise-data
     depends_on: [ clone ]
     commands:
-      - eval "$(mise activate bash --shims)" && mise install  && mise use python@3.12
-      - python -m venv venv && . venv/bin/activate && pip install flake8 pytest pyyaml && export PATH="./venv/bin:$PATH" 
+      - eval "$(mise activate bash --shims)" && mise install
+      - uv pip install flake8 pytest pyyaml
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
       - rm -rf .pytest_cache katalog/tests/__pycache__
@@ -124,7 +124,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
 
 platform:
   os: linux
@@ -229,7 +229,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
 
 platform:
   os: linux
@@ -334,7 +334,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
 
 platform:
   os: linux
@@ -438,7 +438,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
   - e2e-kubernetes-1.31
 
 platform:
@@ -544,7 +544,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - policeman
+  - render
   - e2e-kubernetes-1.31
 
 platform:

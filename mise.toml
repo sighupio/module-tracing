@@ -13,6 +13,8 @@ bats = "1.11.0"
 dyff = "1.9.0"    
 drone = "1.9.0"
 "ubi:google/addlicense" = "v1.1.1"   
+uv = "0.8.15"
+python = "3.12"
 
 # Development task definitions
 [tasks.add-license]
@@ -49,3 +51,6 @@ mise run add-license
 mise run validate-manifests
 echo "✅ Development environment ready!"
 '''
+
+[env]
+_.python.venv = { path = ".venv", create = true }
