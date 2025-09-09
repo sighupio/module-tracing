@@ -110,7 +110,7 @@ steps:
     depends_on: [ clone ]
     commands:
       - eval "$(mise activate bash --shims)" && mise install
-      - uv pip install flake8 pytest pyyaml
+      - uv venv --python 3.12 && source .venv/bin/activate && uv pip install flake8 pytest pyyaml
       - flake8 --ignore=E501 katalog/tests/test.py
       - bash katalog/tests/pytest.sh
       - rm -rf .pytest_cache katalog/tests/__pycache__
