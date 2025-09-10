@@ -55,8 +55,9 @@ set -o pipefail
 @test "check minio-ha" {
   info
   test(){
-    data=$(kubectl get sts -n tracing -l app=minio -o json | jq '.items[] | select(.metadata.name == "minio-tracing" and .status.replicas == .status.readyReplicas)')
-    if [ "${data}" == "" ]; then return 1; fi
+    replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.replicas // 0')
+    ready_replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.readyReplicas // 0')
+    if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
   }
   loop_it test 60 5
   status=${loop_it_result}
@@ -66,8 +67,9 @@ set -o pipefail
 @test "check tempo-ingester" {
   info
   test(){
-    data=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq '.items[] | select(.metadata.name == "tempo-distributed-ingester" and .status.replicas == .status.readyReplicas)')
-    if [ "${data}" == "" ]; then return 1; fi
+    replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.replicas // 0')
+    ready_replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.readyReplicas // 0')
+    if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
   }
   loop_it test 60 5
   status=${loop_it_result}
