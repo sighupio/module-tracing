@@ -10,7 +10,7 @@
 <!-- markdownlint-enable MD033 MD045 -->
 
 ![Release](https://img.shields.io/badge/Latest%20Release-v1.3.0-blue)
-![License](https://img.shields.io/github/license/sighupio/fury-kubernetes-tracing?label=License)
+![License](https://img.shields.io/github/license/sighupio/module-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
 <!-- <SD-DOCS> -->
@@ -91,7 +91,7 @@ tempo-distributed-distributor.tracing.svc.cluster.local:4317/
 ```yaml
 bases:
   - name: tracing
-    version: "v1.0.3"
+    version: "v1.3.0"
 ```
 
 > See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.
@@ -120,11 +120,11 @@ kustomize build . | kubectl apply -f -
 <!-- Links -->
 
 [tempo-page]: https://github.com/grafana/tempo
-[kfd-repo]: https://github.com/sighupio/fury-distribution
+[kfd-repo]: https://github.com/sighupio/distribution
 [furyctl-repo]: https://github.com/sighupio/furyctl
 [kustomize-repo]: https://github.com/kubernetes-sigs/kustomize
 [kfd-docs]: https://docs.kubernetesfury.com/docs/distribution/
-[compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-tracing/blob/master/docs/COMPATIBILITY_MATRIX.md
+[compatibility-matrix]: https://github.com/sighupio/module-tracing/blob/main/docs/COMPATIBILITY_MATRIX.md
 [otel-collector]: https://opentelemetry.io/docs/collector/#when-to-use-a-collector
 
 <!-- </SD-DOCS> -->
