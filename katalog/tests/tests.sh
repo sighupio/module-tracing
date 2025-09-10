@@ -55,12 +55,6 @@ set -o pipefail
 @test "check minio-ha" {
   info
   test(){
-    echo "# Checking MinIO StatefulSet status..." >&3
-    kubectl get sts -n tracing -l app=minio >&3
-    kubectl get pods -n tracing -l app=minio >&3
-    replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.replicas // "unknown"')
-    ready_replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.readyReplicas // 0')
-    echo "# MinIO replicas: $ready_replicas/$replicas ready" >&3
     replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.replicas // 0')
     ready_replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.readyReplicas // 0')
     if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
@@ -73,12 +67,6 @@ set -o pipefail
 @test "check tempo-ingester" {
   info
   test(){
-    echo "# Checking Tempo ingester StatefulSet status..." >&3
-    kubectl get sts -n tracing -l app.kubernetes.io/component=ingester >&3
-    kubectl get pods -n tracing -l app.kubernetes.io/component=ingester >&3
-    replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.replicas // "unknown"')
-    ready_replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.readyReplicas // 0')
-    echo "# Tempo ingester replicas: $ready_replicas/$replicas ready" >&3
     replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.replicas // 0')
     ready_replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.readyReplicas // 0')
     if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
