@@ -159,6 +159,7 @@ data:
         location ~ /opentelemetry {
           grpc_pass          grpc://tempo-distributed-distributor.tracing.svc.cluster.local:4317;
         }
+      }
     }
 ---
 # Source: tempo-distributed/templates/compactor/service-compactor.yaml
