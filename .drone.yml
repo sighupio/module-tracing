@@ -75,7 +75,7 @@ steps:
       - render
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
-      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.33.0
+      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.34.0
     environment:
       KUBERNETES_MANIFESTS: tempo-distributed.yml
 
@@ -578,6 +578,103 @@ steps:
         path: /mise-data
     commands:
       - eval "$(mise activate bash --shims)" && mise install 
+      - |
+        cat <<EOF > kind-config.yaml
+        kind: Cluster
+        apiVersion: kind.x-k8s.io/v1alpha4
+        networking:
+          disableDefaultCNI: false
+        EOF
+      - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
+
+  - name: e2e
+    image: quay.io/sighup/mise:v2025.4.4
+    pull: always
+    network_mode: host
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+      KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
+      FURYCTL_VERSION: v0.32.0
+    volumes:
+      - name: mise-cache
+        path: /mise-data
+    depends_on: [create Kind cluster]
+    commands:
+      - eval "$(mise activate bash --shims)" && mise install 
+      - bats -t katalog/tests/tests.sh
+
+  - name: delete-kind-cluster
+    image: quay.io/sighup/mise:v2025.4.4
+    pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      KIND_VERSION: 0.30.0
+      GITHUB_TOKEN:
+        from_secret: github_token
+      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: mise-cache
+        path: /mise-data
+    commands:
+      - eval "$(mise activate bash --shims)" && mise install 
+      - kind delete cluster --name $${CLUSTER_NAME} || true
+    depends_on:
+      - e2e
+    when:
+      status:
+        - success
+        - failure
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  - name: mise-cache
+    host:
+      path: /root/mise_data_dir
+---
+name: e2e-kubernetes-1.34
+kind: pipeline
+type: docker
+
+depends_on:
+  - render
+  - e2e-kubernetes-1.31
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  ref:
+    include:
+      - refs/tags/**
+
+steps:
+  - name: create Kind cluster
+    image: quay.io/sighup/mise:v2025.4.4
+    pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+      KIND_VERSION: 0.30.0
+      CLUSTER_VERSION: v1.34.0
+      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+      KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: mise-cache
+        path: /mise-data
+    commands:
+      - eval "$(mise activate bash --shims)" && mise install 
       # create a custom config to disable Kind's default CNI so
       # we can test using SD's networking module.
       - |
@@ -656,6 +753,7 @@ depends_on:
   - e2e-kubernetes-1.31
   - e2e-kubernetes-1.32
   - e2e-kubernetes-1.33
+  - e2e-kubernetes-1.34
 
 platform:
   os: linux
