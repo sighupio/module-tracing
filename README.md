@@ -30,7 +30,7 @@ All the components are deployed in the `tracing` namespace in the cluster.
 | Package                                        | Version                         | Description                     |
 | ---------------------------------------------- | ------------------------------- | ------------------------------- |
 | [tempo-distributed](katalog/tempo-distributed) | `2.8.2`                         | Distributed Tempo deployment    |
-| [minio-ha](katalog/minio-ha)                   | `vRELEASE.2023-01-12T02-06-16Z` | Three nodes HA MinIO deployment |
+| [minio-ha](katalog/minio-ha)                   | `RELEASE.2025-09-07T16-13-09Z`  | Three nodes HA MinIO deployment |
 
 Click on each package to see its full documentation.
 
