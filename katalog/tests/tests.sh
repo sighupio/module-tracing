@@ -25,14 +25,21 @@ set -o pipefail
 
 @test "wait for apply to settle minio and dump state to dump.json" {
   info
-  max_retry=0
-  echo "=====" $max_retry "=====" >&2
-  while kubectl get pods --all-namespaces | grep -ie "\(Pending\|Error\|CrashLoop\|ContainerCreating\|PodInitializing\)" >&2
-  do
-    [ $max_retry -lt 30 ] || ( kubectl describe all --all-namespaces >&2 && return 1 )
-    sleep 10 && echo "# waiting..." $max_retry >&3
-    max_retry=$((max_retry+1))
-  done
+  # Wait for minio statefulset to be ready
+  test_sts(){
+    check_sts_ready "minio-tracing" "tracing"
+  }
+  loop_it test_sts 30 10
+  status=${loop_it_result}
+  [ "$status" -eq 0 ] || ( kubectl describe sts -n tracing minio-tracing >&2 && return 1 )
+
+  # Wait for bucket setup job to complete successfully
+  test_job(){
+    check_job_ready "minio-tracing-buckets-setup" "tracing"
+  }
+  loop_it test_job 30 10
+  status=${loop_it_result}
+  [ "$status" -eq 0 ] || ( kubectl describe job -n tracing minio-tracing-buckets-setup >&2 && kubectl logs -n tracing job/minio-tracing-buckets-setup >&2 && return 1 )
 }
 
 @test "testing tempo apply" {
@@ -42,36 +49,34 @@ set -o pipefail
 
 @test "wait for apply to settle tempo-distributed and dump state to dump.json" {
   info
-  max_retry=0
-  echo "=====" $max_retry "=====" >&2
-  while kubectl get pods --all-namespaces | grep -ie "\(Pending\|Error\|CrashLoop\|ContainerCreating\|PodInitializing\)" >&2
-  do
-    [ $max_retry -lt 30 ] || ( kubectl describe all --all-namespaces >&2 && return 1 )
-    sleep 10 && echo "# waiting..." $max_retry >&3
-    max_retry=$((max_retry+1))
-  done
+  test(){
+    # Check no pods are in bad states in tracing namespace
+    if kubectl get pods -n tracing | grep -qie "\(Pending\|Error\|CrashLoop\|ContainerCreating\|PodInitializing\|ImagePull\)"; then
+      return 1
+    fi
+    return 0
+  }
+  loop_it test 30 10
+  status=${loop_it_result}
+  [ "$status" -eq 0 ] || ( kubectl describe all -n tracing >&2 && return 1 )
 }
 
 @test "check minio-ha" {
   info
   test(){
-    replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.replicas // 0')
-    ready_replicas=$(kubectl get sts -n tracing -l app=minio -o json | jq -r '.items[0].status.readyReplicas // 0')
-    if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
+    check_sts_ready "minio-tracing" "tracing"
   }
   loop_it test 60 5
   status=${loop_it_result}
-  [[ "$status" -eq 0 ]]
+  [ "$status" -eq 0 ] || ( kubectl describe sts -n tracing minio-tracing >&2 && return 1 )
 }
 
 @test "check tempo-ingester" {
   info
   test(){
-    replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.replicas // 0')
-    ready_replicas=$(kubectl get sts -n tracing -l app.kubernetes.io/component=ingester -o json | jq -r '.items[0].status.readyReplicas // 0')
-    if [ "$replicas" -ne "$ready_replicas" ] || [ "$ready_replicas" -eq 0 ]; then return 1; fi
+    check_sts_ready "tempo-distributed-ingester" "tracing"
   }
   loop_it test 60 5
   status=${loop_it_result}
-  [[ "$status" -eq 0 ]]
+  [ "$status" -eq 0 ] || ( kubectl describe sts -n tracing tempo-distributed-ingester >&2 && return 1 )
 }

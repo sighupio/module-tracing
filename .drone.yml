@@ -169,6 +169,8 @@ steps:
       # NOTE: kind's `--wait` flag that waits for the control-plane ot be ready
       # does not work when disabling the default CNI. It will always go in timeout.
       - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      # Remove cached mc client image to force fresh pull
+      - docker exec $${CLUSTER_NAME}-control-plane crictl rmi registry.sighup.io/fury/minio/mc || true
       # save the kubeconfig so we can use it from other steps.
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
@@ -191,30 +193,30 @@ steps:
       - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
-  - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
-    pull: always
-    environment:
-      MISE_DATA_DIR: /mise-data
-      KIND_VERSION: 0.30.0
-      GITHUB_TOKEN:
-        from_secret: github_token
-      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-      - name: mise-cache
-        path: /mise-data
-    commands:
-      - eval "$(mise activate bash --shims)" && mise install 
-      # does not matter if the command fails
-      - kind delete cluster --name $${CLUSTER_NAME} || true
-    depends_on:
-      - e2e
-    when:
-      status:
-        - success
-        - failure
+  # - name: delete-kind-cluster
+  #   image: quay.io/sighup/mise:v2025.4.4
+  #   pull: always
+  #   environment:
+  #     MISE_DATA_DIR: /mise-data
+  #     KIND_VERSION: 0.30.0
+  #     GITHUB_TOKEN:
+  #       from_secret: github_token
+  #     CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+  #   volumes:
+  #     - name: dockersock
+  #       path: /var/run/docker.sock
+  #     - name: mise-cache
+  #       path: /mise-data
+  #   commands:
+  #     - eval "$(mise activate bash --shims)" && mise install
+  #     # does not matter if the command fails
+  #     - kind delete cluster --name $${CLUSTER_NAME} || true
+  #   depends_on:
+  #     - e2e
+  #   when:
+  #     status:
+  #       - success
+  #       - failure
 
 volumes:
   - name: dockersock
@@ -274,6 +276,8 @@ steps:
       # NOTE: kind's `--wait` flag that waits for the control-plane ot be ready
       # does not work when disabling the default CNI. It will always go in timeout.
       - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      # Remove cached mc client image to force fresh pull
+      - docker exec $${CLUSTER_NAME}-control-plane crictl rmi registry.sighup.io/fury/minio/mc || true
       # save the kubeconfig so we can use it from other steps.
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
@@ -296,30 +300,30 @@ steps:
       - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
-  - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
-    pull: always
-    environment:
-      MISE_DATA_DIR: /mise-data
-      KIND_VERSION: 0.30.0
-      GITHUB_TOKEN:
-        from_secret: github_token
-      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-      - name: mise-cache
-        path: /mise-data
-    commands:
-      - eval "$(mise activate bash --shims)" && mise install 
-      # does not matter if the command fails
-      - kind delete cluster --name $${CLUSTER_NAME} || true
-    depends_on:
-      - e2e
-    when:
-      status:
-        - success
-        - failure
+  # - name: delete-kind-cluster
+  #   image: quay.io/sighup/mise:v2025.4.4
+  #   pull: always
+  #   environment:
+  #     MISE_DATA_DIR: /mise-data
+  #     KIND_VERSION: 0.30.0
+  #     GITHUB_TOKEN:
+  #       from_secret: github_token
+  #     CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+  #   volumes:
+  #     - name: dockersock
+  #       path: /var/run/docker.sock
+  #     - name: mise-cache
+  #       path: /mise-data
+  #   commands:
+  #     - eval "$(mise activate bash --shims)" && mise install
+  #     # does not matter if the command fails
+  #     - kind delete cluster --name $${CLUSTER_NAME} || true
+  #   depends_on:
+  #     - e2e
+  #   when:
+  #     status:
+  #       - success
+  #       - failure
 
 volumes:
   - name: dockersock
@@ -379,6 +383,8 @@ steps:
       # NOTE: kind's `--wait` flag that waits for the control-plane ot be ready
       # does not work when disabling the default CNI. It will always go in timeout.
       - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      # Remove cached mc client image to force fresh pull
+      - docker exec $${CLUSTER_NAME}-control-plane crictl rmi registry.sighup.io/fury/minio/mc || true
       # save the kubeconfig so we can use it from other steps.
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
@@ -484,6 +490,8 @@ steps:
       # NOTE: kind's `--wait` flag that waits for the control-plane ot be ready
       # does not work when disabling the default CNI. It will always go in timeout.
       - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      # Remove cached mc client image to force fresh pull
+      - docker exec $${CLUSTER_NAME}-control-plane crictl rmi registry.sighup.io/fury/minio/mc || true
       # save the kubeconfig so we can use it from other steps.
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
@@ -506,30 +514,30 @@ steps:
       - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
-  - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
-    pull: always
-    environment:
-      MISE_DATA_DIR: /mise-data
-      KIND_VERSION: 0.30.0
-      GITHUB_TOKEN:
-        from_secret: github_token
-      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-      - name: mise-cache
-        path: /mise-data
-    commands:
-      - eval "$(mise activate bash --shims)" && mise install 
-      # does not matter if the command fails
-      - kind delete cluster --name $${CLUSTER_NAME} || true
-    depends_on:
-      - e2e
-    when:
-      status:
-        - success
-        - failure
+  # - name: delete-kind-cluster
+  #   image: quay.io/sighup/mise:v2025.4.4
+  #   pull: always
+  #   environment:
+  #     MISE_DATA_DIR: /mise-data
+  #     KIND_VERSION: 0.30.0
+  #     GITHUB_TOKEN:
+  #       from_secret: github_token
+  #     CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+  #   volumes:
+  #     - name: dockersock
+  #       path: /var/run/docker.sock
+  #     - name: mise-cache
+  #       path: /mise-data
+  #   commands:
+  #     - eval "$(mise activate bash --shims)" && mise install
+  #     # does not matter if the command fails
+  #     - kind delete cluster --name $${CLUSTER_NAME} || true
+  #   depends_on:
+  #     - e2e
+  #   when:
+  #     status:
+  #       - success
+  #       - failure
 
 volumes:
   - name: dockersock
@@ -687,6 +695,8 @@ steps:
       # NOTE: kind's `--wait` flag that waits for the control-plane ot be ready
       # does not work when disabling the default CNI. It will always go in timeout.
       - kind create cluster --name $${CLUSTER_NAME} --image registry.sighup.io/fury/kindest/node:$${CLUSTER_VERSION} --config kind-config.yaml
+      # Remove cached mc client image to force fresh pull
+      - docker exec $${CLUSTER_NAME}-control-plane crictl rmi registry.sighup.io/fury/minio/mc || true
       # save the kubeconfig so we can use it from other steps.
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
@@ -709,30 +719,30 @@ steps:
       - eval "$(mise activate bash --shims)" && mise install 
       - bats -t katalog/tests/tests.sh
 
-  - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
-    pull: always
-    environment:
-      MISE_DATA_DIR: /mise-data
-      KIND_VERSION: 0.30.0
-      GITHUB_TOKEN:
-        from_secret: github_token
-      CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-      - name: mise-cache
-        path: /mise-data
-    commands:
-      - eval "$(mise activate bash --shims)" && mise install 
-      # does not matter if the command fails
-      - kind delete cluster --name $${CLUSTER_NAME} || true
-    depends_on:
-      - e2e
-    when:
-      status:
-        - success
-        - failure
+  # - name: delete-kind-cluster
+  #   image: quay.io/sighup/mise:v2025.4.4
+  #   pull: always
+  #   environment:
+  #     MISE_DATA_DIR: /mise-data
+  #     KIND_VERSION: 0.30.0
+  #     GITHUB_TOKEN:
+  #       from_secret: github_token
+  #     CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
+  #   volumes:
+  #     - name: dockersock
+  #       path: /var/run/docker.sock
+  #     - name: mise-cache
+  #       path: /mise-data
+  #   commands:
+  #     - eval "$(mise activate bash --shims)" && mise install
+  #     # does not matter if the command fails
+  #     - kind delete cluster --name $${CLUSTER_NAME} || true
+  #   depends_on:
+  #     - e2e
+  #   when:
+  #     status:
+  #       - success
+  #       - failure
 
 volumes:
   - name: dockersock
