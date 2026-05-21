@@ -2,12 +2,12 @@
 
 <!-- <SD-DOCS> -->
 
-Grafana Tempo is an open source, easy-to-use, and high-scale distributed tracing backend. Tempo is cost-efficient, requiring only object storage to operate, and is deeply integrated with Grafana, Prometheus, and Loki. Tempo can ingest common open source tracing protocols, including Jaeger, Zipkin, and OpenTelemetry.
+Grafana Tempo is an open-source, easy-to-use, and high-scale distributed tracing backend. Tempo is cost-efficient, requiring only object storage to operate, and is deeply integrated with Grafana, Prometheus, and Loki. Tempo can ingest common open source tracing protocols, including Jaeger, Zipkin, and OpenTelemetry.
 
 ## Requirements
 
-- Kubernetes >= `1.24.0`
-- Kustomize >= `v3.5.3`
+- Kubernetes >= `1.25.0`
+- Kustomize >= `3.5.3`
 - [prometheus-operator from SD monitoring module][prometheus-operator]
 - [grafana from SD monitoring module][grafana]
 
@@ -19,17 +19,17 @@ Grafana Tempo is an open source, easy-to-use, and high-scale distributed tracing
 
 ## Configuration
 
-Tempo is configured with the distributed approach. By default we configure 3 fixed ingesters and the other components in autoscaling mode.
+Tempo is configured with the distributed approach. By default, we configure 3 fixed ingesters and the other components in autoscaling mode.
 
 Each component has a default limit and request:
 
 ```yaml
 requests:
-    cpu: 50m
-    memory: 128Mi
+  cpu: 50m
+  memory: 128Mi
 limits:
-    cpu: 512m 
-    memory: 1024Mi
+  cpu: 512m
+  memory: 1024Mi
 ```
 
 
