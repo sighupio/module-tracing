@@ -1,22 +1,16 @@
 # MinIO HA - maintenance
 
-To maintain the MinIO package, you should follow these steps.
-
-Download the latest tgz from [Main Minio repository releases](https://github.com/minio/minio/releases).
-
-Extract to a folder of your choice, for example: `/tmp/minio`.
-
-Run the following command:
+To upgrade the MinIO package, run:
 
 ```bash
-helm template minio-tracing /tmp/minio/helm/minio --values MAINTENANCE.values.yaml -n tracing > minio-built.yaml
+./upgrade.sh
 ```
 
-Minio's helm comes packaged with a specific mc (its client) version, to find out
-which version comes with it you can inspect `/tmp/minio/helm/minio/values.yaml`.
+The script automatically:
 
-What was customized (what differs from the helm template command):
-
-- Config has been moved from the template output and generated via kustomize
-- Added `preferredDuringSchedulingIgnoredDuringExecution` on minio pods
-
+1. Fetches the latest release from [chainguard-forks/minio](https://github.com/chainguard-forks/minio/releases)
+2. Fetches the latest mc release from [minio/mc](https://github.com/minio/mc/releases)
+3. Downloads and extracts the Helm chart
+4. Updates image tags in `MAINTENANCE.values.yaml` and `kustomization.yaml`
+5. Re-renders `deploy.yaml` (excluding the ConfigMap, which is managed via kustomize)
+6. Runs `mise run add-license`
