@@ -34,14 +34,12 @@ kustomize build katalog/minio-ha > /dev/null && echo "  ✅ minio-ha"
 echo "✅ All manifests validated!"
 '''
 
-
 [tasks.test]
 description = "Run tests"
 run = '''
 echo "Running tests"
 bats -t katalog/tests/tests.sh
 '''
-
 
 [tasks.setup]
 description = "Complete development environment setup"
