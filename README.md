@@ -9,7 +9,7 @@
 </h1>
 <!-- markdownlint-enable MD033 MD045 -->
 
-![Release](https://img.shields.io/badge/Latest%20Release-v1.4.0-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v1.5.0-blue)
 ![License](https://img.shields.io/github/license/sighupio/module-tracing?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -27,23 +27,24 @@ The module contains the [tempo][tempo-page] tool from grafana.
 
 All the components are deployed in the `tracing` namespace in the cluster.
 
-| Package                                        | Version                         | Description                     |
-| ---------------------------------------------- | ------------------------------- | ------------------------------- |
-| [tempo-distributed](katalog/tempo-distributed) | `2.8.2`                         | Distributed Tempo deployment    |
-| [minio-ha](katalog/minio-ha)                   | `RELEASE.2025-09-07T16-13-09Z`  | Three nodes HA MinIO deployment |
+| Package                                        | Version                        | Description                     |
+| ---------------------------------------------- |--------------------------------| ------------------------------- |
+| [tempo-distributed](katalog/tempo-distributed) | `2.10.5`                       | Distributed Tempo deployment    |
+| [minio-ha](katalog/minio-ha)                   | `RELEASE.2026-05-20T23-44-52Z` | Three nodes HA MinIO deployment |
 
 Click on each package to see its full documentation.
 
 ## Compatibility
 
 | Kubernetes Version |   Compatibility    | Notes           |
-| ------------------ | :----------------: | --------------- |
+|--------------------| :----------------: | --------------- |
 | `1.29.x`           | :white_check_mark: | No known issues |
 | `1.30.x`           | :white_check_mark: | No known issues |
 | `1.31.x`           | :white_check_mark: | No known issues |
 | `1.32.x`           | :white_check_mark: | No known issues |
 | `1.33.x`           | :white_check_mark: | No known issues |
 | `1.34.x`           | :white_check_mark: | No known issues |
+| `1.35.x`           | :white_check_mark: | No known issues |
 
 Check the [compatibility matrix][compatibility-matrix] for additional information about previous releases of the modules.
 
@@ -74,7 +75,7 @@ spec:
 
 #### Sending Traces to Tempo
 
-To send traces form an instrumented application to Tempo, point the application to the Distributor's service:
+To send traces from an instrumented application to Tempo, point the application to the Distributor's service:
 
 ```plaintext
 tempo-distributed-distributor.tracing.svc.cluster.local:4317/
@@ -92,7 +93,7 @@ tempo-distributed-distributor.tracing.svc.cluster.local:4317/
 ```yaml
 bases:
   - name: tracing
-    version: "v1.4.0"
+    version: "v1.5.0"
 ```
 
 > See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.
@@ -142,6 +143,6 @@ In case you experience any problems with the module, please [open a new issue](h
 
 ## License
 
-This module is open-source and it's released under the following [LICENSE](LICENSE)
+This module is open-source, and it's released under the following [LICENSE](LICENSE)
 
 <!-- </FOOTER> -->
