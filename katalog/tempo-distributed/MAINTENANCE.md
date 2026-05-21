@@ -1,26 +1,26 @@
 # Tempo - maintenance
 
-To maintain the Tempo package, you should follow these steps.
+To update the Tempo package to the latest chart version, run:
 
 ```bash
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-helm search repo grafana/tempo-distributed # get the latest chart version
-helm pull grafana/tempo-distributed --version 1.19.0 --untar --untardir /tmp # this command will download the chart in /tmp/tempo-distributed
+bash upgrade.sh
 ```
 
-Run the following command:
+The script will:
 
-```bash
-helm template tempo-distributed /tmp/tempo-distributed -n tracing --values MAINTENANCE.values.yaml > tempo-distributed-built.yaml
-```
+1. Pull the latest `grafana-community/tempo-distributed` Helm chart
+2. Update image tags in `MAINTENANCE.values.yaml` and `kustomization.yaml`
+3. Re-render `deploy.yaml` from the chart using `MAINTENANCE.values.yaml`
 
-With the `tempo-distributed-built.yaml` file, check differences with the current `deploy.yml` file and change accordingly.
+After running the script, review the changes in `deploy.yaml` and adjust if needed.
 
 What was customized:
 
-- nginx-unprivileged image was bumped to the latest available version
-- PodDisruptionBudget apiVersion bumped to policy/v1
+- `useExternalConfig: true` — ConfigMaps are managed via Kustomize (`configMapGenerator` in `kustomization.yaml` using `configs/tempo.yaml` and `configs/overrides.yaml`)
+- `metricsGenerator.enabled: false`
+- `memcachedExporter.enabled: false`
+- `queryFrontend.query.enabled: false`
+- Storage backend set to S3 (MinIO)
 
 
 ## Testing the tracing stack
