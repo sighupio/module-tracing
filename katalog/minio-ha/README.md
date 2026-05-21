@@ -9,7 +9,7 @@ In order to achieve high availability (HA) for MinIO, a cluster of multiple MinI
 ## Requirements
 
 - Kubernetes >= `1.23.0`
-- Kustomize >= `v3.5.3`
+- Kustomize >= `3.5.3`
 - [prometheus-operator from SD monitoring module][prometheus-operator]
 
 > Prometheus Operator is necessary since we configure a `ServiceMonitor` to make
