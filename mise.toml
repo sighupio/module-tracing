@@ -3,8 +3,8 @@
 # license that can be found in the LICENSE file.
 
 [tools]
-kind = "0.30.0"
-kubectl = "1.34.0"
+kind = "0.31.0"
+kubectl = "1.35.5"
 kustomize = "5.6.0"
 helm = "3.15.0"    
 yq = "4.43.1"      
@@ -34,6 +34,14 @@ kustomize build katalog/minio-ha > /dev/null && echo "  ✅ minio-ha"
 echo "✅ All manifests validated!"
 '''
 
+[tasks.local-tests]
+description = "Run local tests"
+run = '''
+echo "Running local tests"
+kind create cluster --config katalog/tests/kind/config.yml
+bats -t katalog/tests/tests.sh
+kind delete cluster --name module-tracing
+'''
 
 [tasks.test]
 description = "Run tests"
@@ -41,7 +49,6 @@ run = '''
 echo "Running tests"
 bats -t katalog/tests/tests.sh
 '''
-
 
 [tasks.setup]
 description = "Complete development environment setup"
