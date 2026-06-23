@@ -2,44 +2,26 @@
 
 <!-- <SD-DOCS> -->
 
-MinIO is a popular distributed object storage system that allows organizations to deploy highly available
-and scalable storage infrastructure.
-In order to achieve high availability (HA) for MinIO, a cluster of multiple MinIO nodes must be deployed backed by their own set of PVCs.
+## Overview
 
-## Requirements
+MinIO is a distributed object storage system that allows deploying highly available and scalable storage infrastructure. In the Tracing Module it provides the highly available (HA) object storage backend used by Tempo, deployed as a cluster of multiple MinIO nodes each backed by its own set of PVCs.
 
-- Kubernetes >= `1.23.0`
-- Kustomize >= `3.5.3`
-- [prometheus-operator from SD monitoring module][prometheus-operator]
+## Upstream project
 
-> Prometheus Operator is necessary since we configure a `ServiceMonitor` to make
-> some metrics available from `minio` on prometheus
-
-## Image repository and tag
-
-* MinIO image: `minio/minio`
-* MinIO repo: [MinIO on GitHub][minio-gh]
-
-## Configuration
-
-MinIO HA is deployed in the following configuration:
-
-- Three Pod MinIO statefulset with 2 PVCs per Pod
-- Custom init Job to initialize buckets (`loki` and `errors`)  and default retention (7 days on `errors` bucket)
+This package is based on the upstream [MinIO][minio-github].
 
 ## Deployment
 
-You can deploy minio-ha by running the following command in the root of
-the project:
+This package is deployed as part of **Tracing Module** when you create a cluster with `furyctl`.
 
-```shell
-kustomize build | kubectl apply -f -
-```
+You can customize it under `spec.distribution.modules.tracing.minio` in your `furyctl.yaml`. See the [module documentation](../../README.md) and the configuration reference ([EKSCluster][schema-reference-eks], [KFDDistribution][schema-reference-kfd], [OnPremises][schema-reference-onprem]) for the available options.
 
 <!-- Links -->
 
-[prometheus-operator]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/prometheus-operator
-[minio-gh]: https://github.com/minio/minio
+[minio-github]: https://github.com/minio/minio
+[schema-reference-eks]: https://docs.sighup.io/docs/reference/ekscluster#specdistributionmodulestracing
+[schema-reference-kfd]: https://docs.sighup.io/docs/reference/kfddistribution#specdistributionmodulestracing
+[schema-reference-onprem]: https://docs.sighup.io/docs/reference/onpremises#specdistributionmodulestracing
 
 <!-- </SD-DOCS> -->
 
