@@ -2,50 +2,26 @@
 
 <!-- <SD-DOCS> -->
 
-Grafana Tempo is an open-source, easy-to-use, and high-scale distributed tracing backend. Tempo is cost-efficient, requiring only object storage to operate, and is deeply integrated with Grafana, Prometheus, and Loki. Tempo can ingest common open source tracing protocols, including Jaeger, Zipkin, and OpenTelemetry.
+## Overview
 
-## Requirements
+Grafana Tempo is an open-source, high-scale distributed tracing backend. Tempo is cost-efficient, requiring only object storage to operate, and is deeply integrated with Grafana, Prometheus and Loki. It can ingest common open source tracing protocols, including Jaeger, Zipkin and OpenTelemetry. In the Tracing Module it is deployed in distributed mode with MinIO as its object storage backend.
 
-- Kubernetes >= `1.25.0`
-- Kustomize >= `3.5.3`
-- [prometheus-operator from SD monitoring module][prometheus-operator]
-- [grafana from SD monitoring module][grafana]
+## Upstream project
 
-## Image repository
-
-- registry.sighup.io/fury/memcached
-- registry.sighup.io/fury/grafana/tempo
-- registry.sighup.io/fury/nginxinc/nginx-unprivileged
-
-## Configuration
-
-Tempo is configured with the distributed approach. By default, we configure 3 fixed ingesters and the other components in autoscaling mode.
-
-Each component has a default limit and request:
-
-```yaml
-requests:
-  cpu: 50m
-  memory: 128Mi
-limits:
-  cpu: 512m
-  memory: 1024Mi
-```
-
+This package is based on the upstream [Grafana Tempo][tempo-github].
 
 ## Deployment
 
-You can deploy tempo by running the following command in the root of
-the project:
+This package is deployed as part of **Tracing Module** when you create a cluster with `furyctl`.
 
-```shell
-kustomize build | kubectl apply -f -
-```
+You can customize it under `spec.distribution.modules.tracing.tempo` in your `furyctl.yaml`. See the [module documentation](../../README.md) and the configuration reference ([EKSCluster][schema-reference-eks], [KFDDistribution][schema-reference-kfd], [OnPremises][schema-reference-onprem]) for the available options.
 
 <!-- Links -->
 
-[prometheus-operator]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/prometheus-operator
-[grafana]: https://github.com/sighup-io/fury-kubernetes-monitoring/blob/master/katalog/grafana
+[tempo-github]: https://github.com/grafana/tempo
+[schema-reference-eks]: https://docs.sighup.io/docs/reference/ekscluster#specdistributionmodulestracing
+[schema-reference-kfd]: https://docs.sighup.io/docs/reference/kfddistribution#specdistributionmodulestracing
+[schema-reference-onprem]: https://docs.sighup.io/docs/reference/onpremises#specdistributionmodulestracing
 
 <!-- </SD-DOCS> -->
 
