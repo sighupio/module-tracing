@@ -1,5 +1,10 @@
 # Tempo - maintenance
 
+> [!WARNING]
+> Ensure that changes made in this package are also aligned with the corresponding patches in the
+> [distribution](https://github.com/sighupio/distribution/tree/main/templates/distribution/manifests/tracing/patches) if needed.
+
+
 To update the Tempo package to the latest chart version, run:
 
 ```bash
