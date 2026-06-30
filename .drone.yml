@@ -5,17 +5,26 @@
 name: license
 kind: pipeline
 type: docker
-
+volumes:
+  - name: mise-cache
+    host:
+      path: /root/mise_data_dir
 steps:
   - name: check
-    image: docker.io/library/golang:1.20
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+    volumes:
+      - name: mise-cache
+        path: /mise-data
     commands:
-      - go install github.com/google/addlicense@v1.1.1
-      - addlicense -c "SIGHUP s.r.l" -v -l bsd -y "2017-present" --check .
+      - mise run check-license
 
 ---
-name: render
+name: validate
 kind: pipeline
 type: docker
 
@@ -32,26 +41,8 @@ volumes:
       path: /root/mise_data_dir
 
 steps: 
-  # - name: lint
-  #   image: quay.io/sighup/policeman
-  #   pull: always
-  #   environment:
-  #     FILTER_REGEX_EXCLUDE: (\.github)
-  #     # Identifies false positives like missing 'selector'.
-  #     # Doing this is valid for Kustomize patches
-  #     VALIDATE_KUBERNETES_KUBEVAL: "false"
-  #     # Some duplicated code is intended.
-  #     VALIDATE_JSCPD: "false"
-  #     # hadolint already validated dockerfiles
-  #     VALIDATE_DOCKERFILE: "false"
-  #     # Disable natural language checks
-  #     VALIDATE_NATURAL_LANGUAGE: "false"
-
-  #   depends_on:
-  #     - clone
-
-  - name: render
-    image: quay.io/sighup/mise:v2025.4.4
+  - name: validate
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -67,12 +58,27 @@ steps:
       - kustomize build katalog/tempo-distributed > tempo-distributed.yml
       - kustomize build katalog/minio-ha > minio-ha.yml
 
+  - name: lint
+    image: quay.io/sighup/mise:v2026.6.14
+    pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+    volumes:
+      - name: mise-cache
+        path: /mise-data
+    depends_on:
+      - clone
+    commands:
+      - mise run lint
+
   - &check-deprecated-apis
     name: check-deprecated-apis
     image: us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5
     pull: always
     depends_on:
-      - render
+      - validate
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
       - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.35.0
@@ -83,48 +89,13 @@ steps:
     name: check-deprecated-apis-minio-ha
     environment:
       KUBERNETES_MANIFESTS: minio-ha.yml
-
----
-name: unit-test
-kind: pipeline
-type: docker
-
-depends_on:
-  - render
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: katalog
-    image: quay.io/sighup/mise:v2025.4.4
-    pull: always
-    environment:
-      MISE_DATA_DIR: /mise-data
-      GITHUB_TOKEN:
-        from_secret: github_token
-    volumes:
-      - name: mise-cache
-        path: /mise-data
-    depends_on: [ clone ]
-    commands:
-      - eval "$(mise activate bash --shims)" && mise install
-      - uv venv --python 3.12 && . .venv/bin/activate && uv pip install flake8 pytest pyyaml
-      - . .venv/bin/activate && flake8 --ignore=E501 katalog/tests/test.py
-      - . .venv/bin/activate && bash katalog/tests/pytest.sh
-      - rm -rf .pytest_cache katalog/tests/__pycache__
-    when:
-      event:
-      - push
-
 ---
 name: e2e-kubernetes-1.29
 kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
 
 platform:
   os: linux
@@ -137,7 +108,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -173,7 +144,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -192,7 +163,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -229,7 +200,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.29
 
 platform:
@@ -243,7 +214,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -279,7 +250,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -298,7 +269,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -335,7 +306,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.30
 
 platform:
@@ -349,7 +320,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -385,7 +356,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -404,7 +375,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -440,7 +411,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.31
 
 platform:
@@ -454,7 +425,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -490,7 +461,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -509,7 +480,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -546,7 +517,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.32
 
 platform:
@@ -560,7 +531,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -591,7 +562,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -610,7 +581,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -646,7 +617,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.33
 
 platform:
@@ -660,7 +631,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -693,7 +664,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -712,7 +683,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -750,7 +721,7 @@ kind: pipeline
 type: docker
 
 depends_on:
-  - render
+  - validate
   - e2e-kubernetes-1.34
 
 platform:
@@ -764,7 +735,7 @@ trigger:
 
 steps:
   - name: create Kind cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
@@ -797,7 +768,7 @@ steps:
       - kind get kubeconfig --name $${CLUSTER_NAME} > $${KUBECONFIG}
 
   - name: e2e
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     network_mode: host
     environment:
@@ -816,7 +787,7 @@ steps:
       - bats -t katalog/tests/tests.sh
 
   - name: delete-kind-cluster
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data

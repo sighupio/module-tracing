@@ -3,18 +3,16 @@
 # license that can be found in the LICENSE file.
 
 [tools]
-kind = "0.31.0"
-kubectl = "1.35.5"
-kustomize = "5.6.0"
-helm = "3.15.0"    
-yq = "4.43.1"      
-go = "1.23"        
-bats = "1.11.0"    
-dyff = "1.9.0"    
+bats = "1.11.0"
 drone = "1.9.0"
-"ubi:google/addlicense" = "v1.1.1"   
-uv = "0.8.15"
-python = "3.12"
+dyff = "1.9.0"
+helm = "3.15.0"
+kind = "0.32.0"
+kube-linter = "0.8.3"
+kubectl = "1.35.6"
+kustomize = "5.6.0"
+yq = "4.53.3"
+"ubi:google/addlicense" = "v1.1.1"
 
 # Development task definitions
 [tasks.add-license]
@@ -25,6 +23,14 @@ addlicense -c "SIGHUP s.r.l" -y "2017-present" -v -l bsd .
 echo "✅ License headers added!"
 '''
 
+[tasks.check-license]
+description = "Check that all files have license headers"
+run = '''
+echo "🔍 Checking license headers..."
+addlicense -c "SIGHUP s.r.l" -y "2017-present" -v -l bsd --check .
+echo "✅ All files have license headers!"
+'''
+
 [tasks.validate-manifests]
 description = "Validate all manifests can be built"
 run = '''
@@ -32,6 +38,14 @@ echo "🔍 Validating manifest builds..."
 kustomize build katalog/tempo-distributed > /dev/null && echo "  ✅ tempo-distributed"
 kustomize build katalog/minio-ha > /dev/null && echo "  ✅ minio-ha"
 echo "✅ All manifests validated!"
+'''
+
+[tasks.lint]
+description = "Lint all katalog manifests with kube-linter"
+run = '''
+echo "🔍 Linting katalog/ with kube-linter..."
+kube-linter lint --config .kube-linter.yaml katalog/
+echo "✅ All manifests passed linting!"
 '''
 
 [tasks.local-tests]
@@ -49,15 +63,3 @@ run = '''
 echo "Running tests"
 bats -t katalog/tests/tests.sh
 '''
-
-[tasks.setup]
-description = "Complete development environment setup"
-run = '''
-echo "🚀 Setting up development environment..."
-mise run add-license
-mise run validate-manifests
-echo "✅ Development environment ready!"
-'''
-
-[env]
-_.python.venv = { path = ".venv" }
