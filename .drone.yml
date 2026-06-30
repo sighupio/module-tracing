@@ -41,7 +41,7 @@ volumes:
       path: /root/mise_data_dir
 
 steps: 
-  - name: validate
+  - name: render
     image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
@@ -69,7 +69,7 @@ steps:
       - name: mise-cache
         path: /mise-data
     depends_on:
-      - clone
+      - render
     commands:
       - mise run lint
 
@@ -78,7 +78,7 @@ steps:
     image: us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5
     pull: always
     depends_on:
-      - validate
+      - lint
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
       - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.35.0
