@@ -153,7 +153,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.27.2
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -259,7 +258,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.27.2
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -365,7 +363,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.27.2
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -470,7 +467,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.32.0
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -571,7 +567,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.32.0
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -673,7 +668,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.32.0
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -777,7 +771,6 @@ steps:
         from_secret: github_token
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.32.0
     volumes:
       - name: mise-cache
         path: /mise-data
@@ -882,7 +875,6 @@ steps:
       KUBECTL_VERSION: 1.36.4
       CLUSTER_NAME: ${DRONE_REPO_NAME}-${DRONE_BUILD_NUMBER}-${DRONE_STAGE_NAME}
       KUBECONFIG: /drone/src/kubeconfig-${DRONE_STAGE_NAME}
-      FURYCTL_VERSION: v0.32.0
     volumes:
       - name: mise-cache
         path: /mise-data
