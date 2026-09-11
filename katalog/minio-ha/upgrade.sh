@@ -20,8 +20,7 @@ tar xf /tmp/minio-chainguard/release.tar.gz -C /tmp/minio-chainguard --strip-com
 echo "Extracted archive"
 
 yq -i ".image.tag = \"${MINIO_TAG}\"" MAINTENANCE.values.yaml
-yq -i ".mcImage.tag = \"${MC_RELEASE}\"" MAINTENANCE.values.yaml
-echo "Updated image tags in MAINTENANCE.values.yaml"
+echo "Updated image tag in MAINTENANCE.values.yaml"
 
 yq -i "(.images[] | select(.name == \"quay.io/minio/minio\")).newTag = \"${MINIO_TAG}\"" kustomization.yaml
 yq -i "(.images[] | select(.name == \"quay.io/minio/mc\")).newTag = \"${MC_RELEASE}\"" kustomization.yaml
