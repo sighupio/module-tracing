@@ -30,7 +30,7 @@ The following packages are included in Tracing Module:
 | Package                                        | Version                        | Description                     |
 | ---------------------------------------------- | ------------------------------ | ------------------------------- |
 | [tempo-distributed](katalog/tempo-distributed) | `2.10.8`                       | Distributed Tempo deployment    |
-| [minio-ha](katalog/minio-ha)                   | `RELEASE.2026-05-20T23-44-52Z` | Three nodes HA MinIO deployment |
+| [minio-ha](katalog/minio-ha)                   | `RELEASE.2026-07-17T12-07-51Z` | Three nodes HA MinIO deployment |
 
 Click on each package to see its full documentation.
 
