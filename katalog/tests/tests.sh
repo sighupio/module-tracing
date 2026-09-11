@@ -11,10 +11,10 @@ set -o pipefail
 
 @test "applying monitoring" {
   info
-  kubectl apply -f https://raw.githubusercontent.com/sighupio/fury-kubernetes-monitoring/v2.0.1/katalog/prometheus-operator/crds/0podmonitorCustomResourceDefinition.yaml
-  kubectl apply -f https://raw.githubusercontent.com/sighupio/fury-kubernetes-monitoring/v2.0.1/katalog/prometheus-operator/crds/0prometheusruleCustomResourceDefinition.yaml
-  kubectl apply -f https://raw.githubusercontent.com/sighupio/fury-kubernetes-monitoring/v2.0.1/katalog/prometheus-operator/crds/0servicemonitorCustomResourceDefinition.yaml
-  kubectl apply -f https://raw.githubusercontent.com/sighupio/fury-kubernetes-monitoring/v2.0.1/katalog/prometheus-operator/crds/0probeCustomResourceDefinition.yaml
+  kubectl apply -f https://raw.githubusercontent.com/sighupio/module-monitoring/v4.2.0/katalog/prometheus-operator/crds/0podmonitorCustomResourceDefinition.yaml
+  kubectl apply -f https://raw.githubusercontent.com/sighupio/module-monitoring/v4.2.0/katalog/prometheus-operator/crds/0prometheusruleCustomResourceDefinition.yaml
+  kubectl apply -f https://raw.githubusercontent.com/sighupio/module-monitoring/v4.2.0/katalog/prometheus-operator/crds/0servicemonitorCustomResourceDefinition.yaml
+  kubectl apply -f https://raw.githubusercontent.com/sighupio/module-monitoring/v4.2.0/katalog/prometheus-operator/crds/0probeCustomResourceDefinition.yaml
   kubectl create ns tracing
 }
 

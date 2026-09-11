@@ -34,7 +34,7 @@ tempo:
     # -- Docker image repository
     repository: grafana/tempo
     # -- Overrides the image tag whose default is the chart's appVersion
-    tag: 2.10.5
+    tag: 2.10.8
     pullPolicy: IfNotPresent
 # Configuration for the ingester
 ingester:
@@ -273,7 +273,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.42-alpine
+    tag: 1.6.43-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached

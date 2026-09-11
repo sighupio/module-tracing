@@ -13,10 +13,10 @@ resources:
 images:
   - name: docker.io/memcached
     newName: registry.sighup.io/fury/memcached
-    newTag: "1.6.42-alpine"
+    newTag: "1.6.43-alpine"
   - name: docker.io/grafana/tempo
     newName: registry.sighup.io/fury/grafana/tempo
-    newTag: "2.10.5"
+    newTag: "2.10.8"
   - name: docker.io/nginxinc/nginx-unprivileged
     newName: registry.sighup.io/fury/nginxinc/nginx-unprivileged
     newTag: "1.31-alpine"

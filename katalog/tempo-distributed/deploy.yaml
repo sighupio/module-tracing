@@ -10,12 +10,12 @@ metadata:
   name: tempo-distributed-ingester
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: ingester
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -32,10 +32,10 @@ metadata:
   name: tempo-distributed
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 automountServiceAccountToken: false
 ---
@@ -46,11 +46,11 @@ metadata:
   name: tempo-distributed-gateway
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: gateway
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 data:
   nginx.conf: |
@@ -58,83 +58,83 @@ data:
     error_log  /dev/stderr;
     pid        /tmp/nginx.pid;
     worker_rlimit_nofile 8192;
-    
+
     events {
       worker_connections  4096;  ## Default: 1024
     }
-    
+
     http {
       client_body_temp_path /tmp/client_temp;
       proxy_temp_path       /tmp/proxy_temp_path;
       fastcgi_temp_path     /tmp/fastcgi_temp;
       uwsgi_temp_path       /tmp/uwsgi_temp;
       scgi_temp_path        /tmp/scgi_temp;
-    
+
       proxy_http_version    1.1;
-    
+
       default_type application/octet-stream;
       log_format   main '$remote_addr - $remote_user [$time_local]  $status '
             '"$request" $body_bytes_sent "$http_referer" '
             '"$http_user_agent" "$http_x_forwarded_for"';
       access_log   /dev/stderr  main;
-    
+
       sendfile     on;
       tcp_nopush   on;
       resolver kube-dns.kube-system.svc.cluster.local;
-    
+
       server {
         listen             8080;
-    
+
         location = / {
           return 200 'OK';
           auth_basic off;
         }
-    
+
         location = /jaeger/api/traces {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:14268/api/traces;
         }
-    
+
         location = /zipkin/spans {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:9411/spans;
         }
-    
+
         location = /v1/traces {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:4318/v1/traces;
         }
-    
+
         location = /otlp/v1/traces {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:4318/v1/traces;
         }
-    
+
         location ^~ /api {
           set $query_frontend tempo-distributed-query-frontend.tracing.svc.cluster.local;
           proxy_pass       http://$query_frontend:3200$request_uri;
         }
-    
+
         location = /flush {
           set $ingester tempo-distributed-ingester.tracing.svc.cluster.local;
           proxy_pass       http://$ingester:3200$request_uri;
         }
-    
+
         location = /shutdown {
           set $ingester tempo-distributed-ingester.tracing.svc.cluster.local;
           proxy_pass       http://$ingester:3200$request_uri;
         }
-    
+
         location = /distributor/ring {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:3200$request_uri;
         }
-    
+
         location = /ingester/ring {
           set $distributor tempo-distributed-distributor.tracing.svc.cluster.local;
           proxy_pass       http://$distributor:3200$request_uri;
         }
-    
+
         location = /compactor/ring {
           set $compactor tempo-distributed-compactor.tracing.svc.cluster.local;
           proxy_pass       http://$compactor:3200$request_uri;
@@ -143,12 +143,12 @@ data:
       # OTLP gRPC
       server {
         listen               4317 http2;
-    
+
         location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
           set $distributor  tempo-distributed-distributor.tracing.svc.cluster.local;
           grpc_pass         grpc://$distributor:4317;
         }
-    
+
         location ~ /opentelemetry {
           set $distributor  tempo-distributed-distributor.tracing.svc.cluster.local;
           grpc_pass         grpc://$distributor:4317;
@@ -163,11 +163,11 @@ metadata:
   name: tempo-distributed-compactor
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: compactor
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -190,11 +190,11 @@ metadata:
   name: tempo-distributed-distributor-discovery
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: distributor
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
     prometheus.io/service-monitor: "false"
 spec:
@@ -252,11 +252,11 @@ metadata:
   name: tempo-distributed-distributor
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: distributor
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   internalTrafficPolicy: Cluster
@@ -319,11 +319,11 @@ metadata:
   name: tempo-distributed-gateway
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: gateway
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -338,7 +338,7 @@ spec:
       port: 4317
       targetPort: grpc-otlp
       protocol: TCP
-    
+
   selector:
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
@@ -351,11 +351,11 @@ metadata:
   name: tempo-distributed-gossip-ring
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: gossip-ring
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -381,11 +381,11 @@ metadata:
   name: tempo-distributed-ingester-discovery
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: ingester
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
     prometheus.io/service-monitor: "false"
 spec:
@@ -412,11 +412,11 @@ metadata:
   name: tempo-distributed-ingester
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: ingester
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -444,11 +444,11 @@ metadata:
   name: tempo-distributed-memcached
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: memcached
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -474,11 +474,11 @@ metadata:
   name: tempo-distributed-querier
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: querier
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   ipFamilies: [IPv4]
@@ -504,11 +504,11 @@ metadata:
   name: tempo-distributed-query-frontend-discovery
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: query-frontend
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -538,11 +538,11 @@ metadata:
   name: tempo-distributed-query-frontend
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: query-frontend
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -568,12 +568,12 @@ metadata:
   name: tempo-distributed-compactor
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: compactor
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   minReadySeconds: 10
@@ -589,15 +589,15 @@ spec:
       maxSurge: 0
       maxUnavailable: 1
   template:
-    
+
     metadata:
       annotations:
         checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: compactor
         app.kubernetes.io/part-of: memberlist
@@ -606,10 +606,10 @@ spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: 1000
-      
+
       containers:
         - name: compactor
-          image: docker.io/grafana/tempo:2.10.5
+          image: docker.io/grafana/tempo:2.10.8
           imagePullPolicy: IfNotPresent
           args:
             - -target=compactor
@@ -680,7 +680,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: compactor
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -704,12 +704,12 @@ metadata:
   name: tempo-distributed-distributor
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: distributor
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   minReadySeconds: 10
@@ -724,15 +724,15 @@ spec:
       maxSurge: 0
       maxUnavailable: 1
   template:
-    
+
     metadata:
       annotations:
         checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: distributor
         app.kubernetes.io/part-of: memberlist
@@ -741,10 +741,10 @@ spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: 1000
-      
+
       containers:
         - name: distributor
-          image: docker.io/grafana/tempo:2.10.5
+          image: docker.io/grafana/tempo:2.10.8
           imagePullPolicy: IfNotPresent
           args:
             - -target=distributor
@@ -830,7 +830,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: distributor
-        
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -849,7 +849,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: distributor
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -873,11 +873,11 @@ metadata:
   name: tempo-distributed-gateway
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: gateway
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   minReadySeconds: 10
@@ -890,7 +890,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 575132d4cd301badda4065053bbd59f52694a9dd488e9d945b26dd09530bfa2d
+        checksum/config: 39aa233e3685cbc82e002882429a151114da0b853228a0537e7fcb011ad8cfda
       labels:
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
@@ -901,7 +901,7 @@ spec:
         fsGroup: 1000
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
-      
+
       containers:
         - name: nginx
           image: "docker.io/nginxinc/nginx-unprivileged:1.31-alpine"
@@ -957,7 +957,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: gateway
-        
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -976,7 +976,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: gateway
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -993,12 +993,12 @@ metadata:
   name: tempo-distributed-querier
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: querier
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   minReadySeconds: 10
@@ -1013,15 +1013,15 @@ spec:
       maxSurge: 0
       maxUnavailable: 1
   template:
-    
+
     metadata:
       annotations:
         checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: querier
         app.kubernetes.io/part-of: memberlist
@@ -1030,10 +1030,10 @@ spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: 1000
-      
+
       containers:
         - name: querier
-          image: docker.io/grafana/tempo:2.10.5
+          image: docker.io/grafana/tempo:2.10.8
           imagePullPolicy: IfNotPresent
           args:
             - -target=querier
@@ -1095,7 +1095,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: querier
-        
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -1114,7 +1114,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: querier
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -1138,11 +1138,11 @@ metadata:
   name: tempo-distributed-query-frontend
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: query-frontend
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   minReadySeconds: 10
@@ -1158,15 +1158,15 @@ spec:
       maxSurge: 0
       maxUnavailable: 1
   template:
-    
+
     metadata:
       annotations:
         checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: query-frontend
         app.kubernetes.io/part-of: memberlist
@@ -1175,10 +1175,10 @@ spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: 1000
-      
+
       containers:
         - name: query-frontend
-          image: docker.io/grafana/tempo:2.10.5
+          image: docker.io/grafana/tempo:2.10.8
           imagePullPolicy: IfNotPresent
           args:
             - -target=query-frontend
@@ -1243,7 +1243,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: query-frontend
-        
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -1262,7 +1262,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: query-frontend
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -1286,11 +1286,11 @@ metadata:
   name: tempo-distributed-distributor
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: distributor
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   scaleTargetRef:
@@ -1314,11 +1314,11 @@ metadata:
   name: tempo-distributed-gateway
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: gateway
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   scaleTargetRef:
@@ -1342,11 +1342,11 @@ metadata:
   name: tempo-distributed-querier
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: querier
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   scaleTargetRef:
@@ -1370,12 +1370,12 @@ metadata:
   name: tempo-distributed-ingester
   namespace: tracing
   labels:
-    
-    helm.sh/chart: tempo-distributed-2.23.0
+
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: ingester
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 3
@@ -1391,39 +1391,41 @@ spec:
     rollingUpdate:
       partition: 0
   template:
+
     metadata:
+      annotations:
+        checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: ingester
         app.kubernetes.io/part-of: memberlist
-      annotations:
-        checksum/config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
     spec:
       serviceAccountName: tempo-distributed
+      enableServiceLinks: false
       securityContext:
         fsGroup: 1000
-      enableServiceLinks: false
-      
-      initContainers:
-        []
+
       containers:
-        - args:
+        - name: ingester
+          image: docker.io/grafana/tempo:2.10.8
+          imagePullPolicy: IfNotPresent
+          args:
             - -target=ingester
             - -config.file=/conf/tempo.yaml
-          image: docker.io/grafana/tempo:2.10.5
-          imagePullPolicy: IfNotPresent
-          name: ingester
           ports:
-            - name: grpc
-              containerPort: 9095
-            - name: http-memberlist
-              containerPort: 7946
-            - name: http-metrics
-              containerPort: 3200
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3200
+              name: http-metrics
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
           env:
             - name: GOMEMLIMIT
               value: 870MiB
@@ -1474,7 +1476,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: ingester
-        
+
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -1494,7 +1496,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: ingester
                 topologyKey: topology.kubernetes.io/zone
-        
+
       volumes:
         - name: config
           configMap:
@@ -1518,11 +1520,11 @@ metadata:
   name: tempo-distributed-memcached
   namespace: tracing
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: memcached
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -1536,22 +1538,22 @@ spec:
   template:
     metadata:
       labels:
-        helm.sh/chart: tempo-distributed-2.23.0
+        helm.sh/chart: tempo-distributed-2.26.2
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: tempo-distributed
         app.kubernetes.io/component: memcached
-        app.kubernetes.io/version: "2.10.5"
+        app.kubernetes.io/version: "2.10.7"
         app.kubernetes.io/managed-by: Helm
     spec:
       serviceAccountName: tempo-distributed
       securityContext:
         fsGroup: 1000
       enableServiceLinks: false
-      
+
       initContainers:
         []
       containers:
-        - image: docker.io/memcached:1.6.42-alpine
+        - image: docker.io/memcached:1.6.43-alpine
           imagePullPolicy: IfNotPresent
           name: memcached
           ports:
@@ -1600,7 +1602,7 @@ spec:
               app.kubernetes.io/name: tempo
               app.kubernetes.io/instance: tempo-distributed
               app.kubernetes.io/component: memcached
-        
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -1619,7 +1621,7 @@ spec:
                     app.kubernetes.io/instance: tempo-distributed
                     app.kubernetes.io/component: memcached
                 topologyKey: topology.kubernetes.io/zone
-        
+
   updateStrategy:
     type: RollingUpdate
 ---
@@ -1629,10 +1631,10 @@ kind: PrometheusRule
 metadata:
   name: tempo-distributed
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   groups:
@@ -1645,12 +1647,12 @@ metadata:
   name: tempo-distributed-compactor
   namespace: "tracing"
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: compactor
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   namespaceSelector:
@@ -1682,12 +1684,12 @@ metadata:
   name: tempo-distributed-distributor
   namespace: "tracing"
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: distributor
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   namespaceSelector:
@@ -1719,12 +1721,12 @@ metadata:
   name: tempo-distributed-ingester
   namespace: "tracing"
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: ingester
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   namespaceSelector:
@@ -1756,12 +1758,12 @@ metadata:
   name: tempo-distributed-querier
   namespace: "tracing"
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: querier
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   namespaceSelector:
@@ -1793,11 +1795,11 @@ metadata:
   name: tempo-distributed-query-frontend
   namespace: "tracing"
   labels:
-    helm.sh/chart: tempo-distributed-2.23.0
+    helm.sh/chart: tempo-distributed-2.26.2
     app.kubernetes.io/name: tempo
     app.kubernetes.io/instance: tempo-distributed
     app.kubernetes.io/component: query-frontend
-    app.kubernetes.io/version: "2.10.5"
+    app.kubernetes.io/version: "2.10.7"
     app.kubernetes.io/managed-by: Helm
 spec:
   namespaceSelector:
