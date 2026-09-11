@@ -24,7 +24,7 @@ Added two new Prometheus alerts:
 
 ## Breaking Changes 💔
 
-None.
+Tempo drops support for the OpenCensus receiver.
 
 ## Update Guide 🦮
 
